@@ -15,5 +15,4 @@ $app->get('/', App\controllers\UsersController::class . ':home');
 $app->post('/login', App\controllers\UsersController::class . ':login');
 
 
-
 $app->run();
