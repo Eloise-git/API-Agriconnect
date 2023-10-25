@@ -71,11 +71,13 @@ class UsersController
     }
 
     // Insérer l'utilisateur dans la base de données
+    $id = uniqid('u');
     $nom = $data['nom'];
     $prenom = $data['prenom'];
     $password = crypt($data['password'], CRYPT_SHA256);
+    $date = date('Y-m-d');
     $this->db->query("INSERT INTO UTILISATEUR (id_user, firstName_user, lastName_user, email_user, phoneNumber_user, password_user, createdAt_user, role_user) 
-      VALUES('u1',$prenom , $nom, $email, $numero, $password, '2023-01-01', $role");
+      VALUES('$id',$prenom , $nom, $email, $numero, $password, '$date', $role");
 
     // Retourner un message de confirmation
     return $response->getBody()->write('Inscription réussie');
