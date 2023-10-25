@@ -32,13 +32,13 @@ class UsersController
       return $response->withStatus(400)->getBody()->write('Tous les champs sont obligatoires');
     }
     $email = $data['email'];
-    $password= $data['password'];
+    //$password= crypt( $data['password'], CRYPT_SHA256 );
+    $password = sha256($data['password']);
     $userlogin = $this->db->query("SELECT * FROM utilisateur WHERE email_user = '$email' AND password_user = '$password'");
-    if ($userlogin===false) {
+    if (!$userlogin) {
       return $response->withStatus(401);
     }else{ 
-      $data = $userlogin;
-      $response->getBody()->write(json_encode($data));
+      $response->getBody()->write(json_encode($userlogin));
       return $response
       ->withHeader('Content-Type', 'application/json')
       ->withStatus(200);
