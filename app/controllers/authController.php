@@ -52,7 +52,6 @@ class AuthController extends Controller
       $key = $settings['settings']['jwt']['secret'];
       $payload = array(
         "iat" => time(),
-        "nbf" => time() + 24 * 60 * 60, // 24 heures
         "exp" => time() + 30 * 24 * 60 * 60, // 30 jours
         "data" => [
           "id" => $userlogin['id_user'],
