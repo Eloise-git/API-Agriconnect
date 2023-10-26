@@ -20,11 +20,11 @@ class ProductController
   //Permet d'obtenir la liste des produits
   public function getAllCommandes(RequestInterface $request, ResponseInterface $response, array $args)
   {
-    try{
+    try {
       $order = $this->db->query('SELECT * FROM commande');
       $response->getBody()->write(json_encode($order));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -32,12 +32,12 @@ class ProductController
   //Permet d'obtenir les informations d'un produit
   public function getACommande(RequestInterface $request, ResponseInterface $response, array $args)
   {
-    try{
+    try {
       $id_orderWanted = $args['id'];
       $order = $this->db->query("SELECT * FROM commande WHERE id_commande ='$id_commandeWanted");
       $response->getBody()->write(json_encode($order));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -45,7 +45,7 @@ class ProductController
   //Permet d'ajouter un produit
   public function postCommande(RequestInterface $request, ResponseInterface $response, array $args)
   {
-    try{
+    try {
       $id_orderWanted = $args['id'];
       $status_orderWanted = $args['status'];
       $date_orderWanted = $args['date'];
@@ -55,7 +55,7 @@ class ProductController
       $order = $this->db->query("INSERT INTO commande VALUES ($id_orderWanted','$status_orderWanted','$date_orderWanted','$payement_orderWanted','$id_producer_orderWanted','$id_user_orderWanted';");
       $response->getBody()->write(json_encode($order));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -63,7 +63,7 @@ class ProductController
   //Permet de mettre à jour les informations d'un produit
   public function putCommande(RequestInterface $request, ResponseInterface $response, array $args)
   {
-    try{
+    try {
       $id_orderWanted = $args['id'];
       $status_orderWanted = $args['status'];
       $date_orderWanted = $args['date'];
@@ -73,7 +73,7 @@ class ProductController
       $order = $this->db->query("UPDATE commande SET id_order='$id_orderWanted', status_order='$status_orderWanted', date_order='$date_orderWanted', payement_order='$payement_orderWanted', id_producer='$id_producer_orderWanted', id_user='$id_user_orderWanted';");
       $response->getBody()->write(json_encode($order));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -81,12 +81,12 @@ class ProductController
   //Permet de supprimer un produit
   public function deleteCommande(RequestInterface $request, ResponseInterface $response, array $args)
   {
-    try{
+    try {
       $id_orderWanted = $args['id'];
       $order = $this->db->query("DELETE FROM commande WHERE id_order='$id_orderWanted';");
       $response->getBody()->write(json_encode($order));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }

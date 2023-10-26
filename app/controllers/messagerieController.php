@@ -19,19 +19,19 @@ class MessagerieController
     $this->db = new Database();
   }
 
-  
+
   public function getToken(Request $request, Response $response, array $args)
   {
-    try{
-        $key ='';
-        //Obtention des tokens et vérifications à revoir
-        $token = $request->getHeader('Authorization')[0];
-        $token = explode(" ", $token)[1];
-        $decoded = JWT::decode($token, new key($key, 'HS256'));
+    try {
+      $key = '';
+      //Obtention des tokens et vérifications à revoir
+      $token = $request->getHeader('Authorization')[0];
+      $token = explode(" ", $token)[1];
+      $decoded = JWT::decode($token, new key($key, 'HS256'));
 
-        $response->getBody()->write(json_encode($decoded));
-        return $response;
-    }catch (Exception $e) {
+      $response->getBody()->write(json_encode($decoded));
+      return $response;
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -39,11 +39,11 @@ class MessagerieController
   //Permet d'obtenir la liste des messages
   public function getAllMessages(Request $request, Response $response, array $args)
   {
-    try{
+    try {
 
-        $response->getBody()->write(json_encode($decoded));
-        return $response;
-    }catch (Exception $e) {
+      $response->getBody()->write(json_encode($decoded));
+      return $response;
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
@@ -56,14 +56,15 @@ class MessagerieController
       $message = $this->db->query('SELECT * FROM messagerie WHERE id_message = $id_messageWanted');
       $response->getBody()->write(json_encode($message));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
 
   //Permet d'ajouter un message
-  public function postMessage(Request $request, Response $response, array $args){
-    try{
+  public function postMessage(Request $request, Response $response, array $args)
+  {
+    try {
       $id_messageWanted = $args['id'];
       $date_messageWanted = $args['date'];
       $content_messageWanted = $args['content'];
@@ -72,19 +73,20 @@ class MessagerieController
       $message = $this->db->query("INSERT INTO messagerie VALUES ($id_messageWanted','$date_messageWanted','$content_messageWanted','$id_userWanted','$id_user1Wanted';");
       $response->getBody()->write(json_encode($message));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
 
   //Permet de supprimer un message
-  public function deleteMessage(Request $request, Response $response, array $args){
+  public function deleteMessage(Request $request, Response $response, array $args)
+  {
     try {
       $id_messageWanted = $args['id'];
       $message = $this->db->query("DELETE FROM messagerie WHERE id_message='$id_messageWanted';");
       $response->getBody()->write(json_encode($message));
       return $response;
-    }catch (Exception $e) {
+    } catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
