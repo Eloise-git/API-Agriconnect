@@ -18,7 +18,7 @@ class Database
   {
     $req = $this->pdo->prepare($query);
     $req->execute();
-    return $req->fetchAll();
+    return $req->fetchAll(PDO::FETCH_ASSOC);
   }
 
 }
