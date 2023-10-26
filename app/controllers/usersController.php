@@ -58,7 +58,7 @@ class UsersController
   {
     $data = $request->getParsedBody();
     $role = getbody();
-    
+
     // Vérifier que tous les champs sont renseignés
     if (!isset($data['nom']) || !isset($data['prenom']) || !isset($data['email']) || !isset($data['password'])) {
       return $response->withStatus(400)->getBody()->write('Tous les champs sont obligatoires');
