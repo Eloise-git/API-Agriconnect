@@ -58,32 +58,35 @@ class UsersController
   //Permet de s'inscrire à l'application
   public function register(Request $request, Response $response, array $args)
   {
+    try {
     $data = $request->getParsedBody();
-    $role = getbody();
     // Vérifier que tous les champs sont renseignés
-    if (!isset($data['nom']) || !isset($data['prenom']) || !isset($data['email']) || !isset($data['password'])) {
-      return $response->withStatus(400)->getBody()->write('Tous les champs sont obligatoires');
+    if (!isset($data['nom']) || !isset($data['prenom']) || !isset($data['email']) || !isset($data['password']) || !isset($data['numero']) || !isset($data['role'])) {
+      return send($response, 'Tous les champs sont obligatoires', true, 400);
     }
-
-    // Vérifier que l'email n'est pas déjà utilisé
     $email = $data['email'];
     $user = $this->db->query("SELECT * FROM utilisateur WHERE email_user = '$email'");
-    if ($user === true) {
-      return $response->withStatus(400)->getBody()->write('Cet email est déjà utilisé');
+    if ($user) {
+      return send($response, 'Cet email est déjà utilisé', true, 400);
     }
-
-    // Insérer l'utilisateur dans la base de données
+    
     $id = uniqid('u');
     $nom = $data['nom'];
     $prenom = $data['prenom'];
+    $numero = $data['numero'];
+    $role = $data['role'];
     $password = hash('sha256', $data['password']);
     $date = date('Y-m-d');
+
+
     $this->db->query("INSERT INTO UTILISATEUR (id_user, firstName_user, lastName_user, email_user, phoneNumber_user, password_user, createdAt_user, role_user) 
-      VALUES('$id',$prenom , $nom, $email, $numero, $password, '$date', $role");
+    VALUES('$id', '$prenom' , '$nom', '$email', '$numero', '$password', '$date', '$role')");
+
     $newuser = $this->db->query("SELECT * FROM utilisateur WHERE id_user = '$id'");
-    // Retourner un message de confirmation
-    return $response->getBody()->write($newuser);
+    return send($response, $newuser, false, 200);
+
+    }catch (Exception $e) {
+      return send($response, $e->getMessage(), true, 500);
+    }
   }
-
-
 }
