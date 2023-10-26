@@ -41,16 +41,15 @@ class AuthController extends Controller
 
       $hashedPassword = hash('sha256', $password);
       $sql = "SELECT * FROM utilisateur WHERE email_user = '$email' AND password_user = '$hashedPassword'";
-      $userlogin = $this->db->query($sql)[0];
+      $userlogin = $this->db->query($sql);
 
       if (!$userlogin) {
         return send($response, 'Email ou mot de passe incorrect', true, 400);
       }
+      $userlogin = $userlogin[0];
 
-      $key = "your_secret_key";
+      $key = "";
       $payload = array(
-        "iss" => "your_iss",
-        "aud" => "your_aud",
         "iat" => time(),
         "nbf" => time() + 24 * 60 * 60, // 24 heures
         "exp" => time() + 30 * 24 * 60 * 60, // 30 jours
@@ -64,7 +63,7 @@ class AuthController extends Controller
       $res = [
         'id' => $userlogin['id_user'],
         'role' => $userlogin['role_user'],
-        'token' => $jwt
+        'accessToken' => $jwt
       ];
 
       return send($response, $res, false, 200);
@@ -103,7 +102,7 @@ class AuthController extends Controller
       }
 
       $sql = "SELECT * FROM utilisateur WHERE email_user = '$email'";
-      $user = $this->db->query($sql)[0];
+      $user = $this->db->query($sql);
 
       if ($user) {
         return send($response, 'Cet email est déjà utilisé', true, 400);

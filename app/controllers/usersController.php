@@ -21,7 +21,7 @@ class UsersController extends Controller
   public function home(Request $request, Response $response, array $args)
   {
     try {
-      $users = $this->db->query('SELECT * FROM utilisateur');
+      $users = $this->db->query("SELECT * FROM utilisateur");
 
       return send($response, $users, false, 200);
     } catch (Exception $e) {
