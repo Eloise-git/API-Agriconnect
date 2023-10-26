@@ -20,6 +20,17 @@ class MessagerieController
   //Permet d'obtenir la liste des messages
   public function getAllMessages(RequestInterface $request, ResponseInterface $response, array $args)
   {
+    $role = '';
+
+    //Obtention des tokens et vérifications à revoir
+  if (substr($header, 0, 7) !== 'Bearer ') {
+    return false;
+  } else if (substr($header, 0, 7) == $token_producer){
+    $role = 'producer';
+  } elseif (substr($header, 0, 7) == $token_client) {
+    $role = 'client';
+  }
+
     $message = $this->db->query('SELECT * FROM messagerie');
     $response->getBody()->write(json_encode($message));
     return $response;
@@ -41,7 +52,7 @@ class MessagerieController
     $content_messageWanted = $args['content'];
     $id_userWanted = $args['id_user'];
     $id_user1Wanted = $args['id_user1'];
-    $message = $this->db->query("UPDATE messagerie SET id_message='$id_messageWanted', date_message='$date_messageWanted', content_message='$content_messageWanted', id_user='$id_userWanted', id_user1='$id_user1Wanted';");
+    $message = $this->db->query("INSERT INTO messagerie VALUES ($id_messageWanted','$date_messageWanted','$content_messageWanted','$id_userWanted','$id_user1Wanted';");
     $response->getBody()->write(json_encode($message));
     return $response;
   }
