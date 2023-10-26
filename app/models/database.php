@@ -4,6 +4,7 @@ namespace App\models;
 
 use PDO;
 
+
 class Database
 {
 
@@ -11,7 +12,19 @@ class Database
 
   public function __construct()
   {
-    $this->pdo = new PDO('mysql:host=localhost;dbname=agriconnect', 'root', '');
+    $settings = require __DIR__ . '/../settings/settings.php';
+
+    $dbSettings = $settings['settings']['database'];
+
+    $host = $dbSettings['host'];
+    $dbname = $dbSettings['database'];
+    $username = $dbSettings['username'];
+    $password = $dbSettings['password'];
+    $charset = $dbSettings['charset'];
+
+    $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+
+    $this->pdo = new PDO($dsn, $username, $password);
   }
 
   public function query($query)

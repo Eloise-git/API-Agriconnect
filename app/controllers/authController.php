@@ -48,7 +48,8 @@ class AuthController extends Controller
       }
       $userlogin = $userlogin[0];
 
-      $key = "";
+      $settings = require __DIR__ . '/../settings/settings.php';
+      $key = $settings['settings']['jwt']['secret'];
       $payload = array(
         "iat" => time(),
         "nbf" => time() + 24 * 60 * 60, // 24 heures
@@ -124,4 +125,5 @@ class AuthController extends Controller
       return send($response, $e->getMessage(), true, 500);
     }
   }
+
 }
