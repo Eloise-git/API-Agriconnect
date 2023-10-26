@@ -2,8 +2,10 @@
 namespace App\controllers;
 
 use App\models\Database;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class MessagerieController
 {
@@ -17,23 +19,29 @@ class MessagerieController
     $this->db = new Database();
   }
 
-  //Permet d'obtenir la liste des messages
-  public function getAllMessages(RequestInterface $request, ResponseInterface $response, array $args)
+  
+  public function getToken(Request $request, Response $response, array $args)
   {
     try{
-        $role = '';
-
+        $key ='';
         //Obtention des tokens et vérifications à revoir
-      if (substr($header, 0, 7) !== 'Bearer ') {
-        return false;
-      } else if (substr($header, 0, 7) == $token_producer){
-        $role = 'producer';
-      } elseif (substr($header, 0, 7) == $token_client) {
-        $role = 'client';
-      }
+        $token = $request->getHeader('Authorization')[0];
+        $token = explode(" ", $token)[1];
+        $decoded = JWT::decode($token, new key($key, 'HS256'));
 
-        $message = $this->db->query('SELECT * FROM messagerie');
-        $response->getBody()->write(json_encode($message));
+        $response->getBody()->write(json_encode($decoded));
+        return $response;
+    }catch (Exception $e) {
+      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+    }
+  }
+
+  //Permet d'obtenir la liste des messages
+  public function getAllMessages(Request $request, Response $response, array $args)
+  {
+    try{
+
+        $response->getBody()->write(json_encode($decoded));
         return $response;
     }catch (Exception $e) {
       return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
@@ -41,7 +49,7 @@ class MessagerieController
   }
 
   //Permet d'obtenir les informations d'un message
-  public function getAMessage(RequestInterface $request, ResponseInterface $response, array $args)
+  public function getAMessage(Request $request, Response $response, array $args)
   {
     try {
       $id_messageWanted = $args['id'];
@@ -54,7 +62,7 @@ class MessagerieController
   }
 
   //Permet d'ajouter un message
-  public function postMessage(RequestInterface $request, ResponseInterface $response, array $args){
+  public function postMessage(Request $request, Response $response, array $args){
     try{
       $id_messageWanted = $args['id'];
       $date_messageWanted = $args['date'];
@@ -70,7 +78,7 @@ class MessagerieController
   }
 
   //Permet de supprimer un message
-  public function deleteMessage(RequestInterface $request, ResponseInterface $response, array $args){
+  public function deleteMessage(Request $request, Response $response, array $args){
     try {
       $id_messageWanted = $args['id'];
       $message = $this->db->query("DELETE FROM messagerie WHERE id_message='$id_messageWanted';");
