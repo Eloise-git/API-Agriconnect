@@ -14,5 +14,7 @@ $app->get('/', App\controllers\UsersController::class . ':home');
 
 $app->post('/login', App\controllers\UsersController::class . ':login');
 
+$app->post('/register', App\controllers\UsersController::class . ':register');
+
 
 $app->run();
