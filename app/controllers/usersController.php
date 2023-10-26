@@ -82,7 +82,7 @@ class UsersController
     $this->db->query("INSERT INTO UTILISATEUR (id_user, firstName_user, lastName_user, email_user, phoneNumber_user, password_user, createdAt_user, role_user) 
     VALUES('$id', '$prenom' , '$nom', '$email', '$numero', '$password', '$date', '$role')");
 
-    $newuser = $this->db->query("SELECT * FROM utilisateur WHERE id_user = '$id'");
+    $newuser = $this->db->query("SELECT id_user as id, firstName_user as firstName, lastName_user as lastName, email_user as email, phoneNumber_user as phoneNumber, password_user as password, createdAt_user as createdAt, role_user as role FROM utilisateur WHERE id_user = '$id'");
     return send($response, $newuser, false, 200);
 
     }catch (Exception $e) {
