@@ -38,7 +38,7 @@ class UsersController
       $email = $data['email'];
       $password = hash('sha256', $data['password']);
 
-      $userlogin = $this->db->query("SELECT id_user as id, role_user as role,email_user as email FROM utilisateur WHERE email_user = '$email' AND password_user = '$password'");
+      $userlogin = $this->db->query("SELECT id_user as id, role_user as role FROM utilisateur WHERE email_user = '$email' AND password_user = '$password'");
 
       if (!$userlogin) {
         $response->getBody()->write(json_encode("Email ou mot de passe incorrect"));
@@ -74,13 +74,13 @@ class UsersController
     $id = uniqid('u');
     $nom = $data['nom'];
     $prenom = $data['prenom'];
-    $password = crypt($data['password'], CRYPT_SHA256);
+    $password = hash('sha256', $data['password']);
     $date = date('Y-m-d');
     $this->db->query("INSERT INTO UTILISATEUR (id_user, firstName_user, lastName_user, email_user, phoneNumber_user, password_user, createdAt_user, role_user) 
       VALUES('$id',$prenom , $nom, $email, $numero, $password, '$date', $role");
-
+    $newuser = $this->db->query("SELECT * FROM utilisateur WHERE id_user = '$id'");
     // Retourner un message de confirmation
-    return $response->getBody()->write('Inscription réussie');
+    return $response->getBody()->write($newuser);
   }
 
 
