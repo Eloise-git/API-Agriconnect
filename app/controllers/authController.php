@@ -7,7 +7,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Firebase\JWT\JWT;
-use function App\lib\send;
+use function App\lib\sendJSON;
 
 
 require_once __DIR__ . '/../lib/utils.php';
@@ -36,7 +36,7 @@ class AuthController extends Controller
       $password = $data['password'] ?? null;
 
       if (!$email || !$password) {
-        return send($response, 'Tous les champs sont obligatoires', true, 400);
+        return sendJSON($response, 'Tous les champs sont obligatoires', true, 400);
       }
 
       $hashedPassword = hash('sha256', $password);
@@ -44,7 +44,7 @@ class AuthController extends Controller
       $userlogin = $this->db->query($sql);
 
       if (!$userlogin) {
-        return send($response, 'Email ou mot de passe incorrect', true, 400);
+        return sendJSON($response, 'Email ou mot de passe incorrect', true, 400);
       }
       $userlogin = $userlogin[0];
 
@@ -66,10 +66,10 @@ class AuthController extends Controller
         'accessToken' => $jwt
       ];
 
-      return send($response, $res, false, 200);
+      return sendJSON($response, $res, false, 200);
 
     } catch (Exception $e) {
-      return send($response, $e->getMessage(), true, 500);
+      return sendJSON($response, $e->getMessage(), true, 500);
     }
   }
 
@@ -98,14 +98,14 @@ class AuthController extends Controller
       $role = $data['role'] ?? null;
 
       if (!$nom || !$prenom || !$email || !$password || !$numero || !$role) {
-        return send($response, 'Tous les champs sont obligatoires', true, 400);
+        return sendJSON($response, 'Tous les champs sont obligatoires', true, 400);
       }
 
       $sql = "SELECT * FROM utilisateur WHERE email_user = '$email'";
       $user = $this->db->query($sql);
 
       if ($user) {
-        return send($response, 'Cet email est déjà utilisé', true, 400);
+        return sendJSON($response, 'Cet email est déjà utilisé', true, 400);
       }
 
       $id = uniqid('u');
@@ -118,10 +118,10 @@ class AuthController extends Controller
       $sql = "SELECT id_user as id, firstName_user as firstName, lastName_user as lastName, email_user as email, phoneNumber_user as phoneNumber, password_user as password, createdAt_user as createdAt, role_user as role FROM utilisateur WHERE id_user = '$id'";
       $newuser = $this->db->query($sql)[0];
 
-      return send($response, $newuser, false, 200);
+      return sendJSON($response, $newuser, false, 200);
 
     } catch (Exception $e) {
-      return send($response, $e->getMessage(), true, 500);
+      return sendJSON($response, $e->getMessage(), true, 500);
     }
   }
 

@@ -3,7 +3,7 @@ namespace App\lib;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-function send(Response $response, $data, bool $error, int $status = 200)
+function sendJSON(Response $response, $data, bool $error, int $status = 200)
 {
   $res = [
     'error' => $error,
