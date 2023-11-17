@@ -25,3 +25,5 @@ $app->get('/user', controllers\UsersController::class . ':getUser')->add(AuthMid
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
 
 $app->run();
+
+return $app;
