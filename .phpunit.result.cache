@@ -1,1 +1,1 @@
-{"version":1,"defects":{"AuthControllerTest::testLogin":7,"AuthControllerTest::testRegister":7},"times":{"AuthControllerTest::testLogin":0.01,"AuthControllerTest::testRegister":0.029}}
+{"version":1,"defects":{"AuthControllerTest::testLogin":7,"AuthControllerTest::testRegister":7},"times":{"AuthControllerTest::testLogin":0.049,"AuthControllerTest::testRegister":0.017}}

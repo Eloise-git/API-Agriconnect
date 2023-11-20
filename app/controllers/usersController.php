@@ -25,9 +25,9 @@ class UsersController extends Controller
     try {
       $users = $this->db->query("SELECT * FROM utilisateur");
 
-      return sendJSON($response, $users, false, 200);
+      return sendJSON($response, $users, 200);
     } catch (Exception $e) {
-      return sendJSON($response, $e->getMessage(), true, 500);
+      return sendJSON($response, $e->getMessage(), 500);
     }
   }
 
@@ -50,9 +50,9 @@ class UsersController extends Controller
         "createdAt" => $user['createdAt_user']
       ];
 
-      return sendJSON($response, $res, false, 200);
+      return sendJSON($response, $res, 200);
     } catch (Exception $e) {
-      return sendJSON($response, $e->getMessage(), true, 500);
+      return sendJSON($response, $e->getMessage(), 500);
     }
   }
 

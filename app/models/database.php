@@ -2,13 +2,15 @@
 
 namespace App\models;
 
+use App\models\DatabaseConnector;
+use App\services\AuthService;
 use PDO;
 
 
 class Database
 {
-
-  private $pdo;
+  private PDO $db;
+  public $auth;
 
   public function __construct()
   {
@@ -24,14 +26,7 @@ class Database
 
     $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
-    $this->pdo = new PDO($dsn, $username, $password);
+    $this->db = new PDO($dsn, $username, $password);
+    $this->auth = new AuthService($this->db);
   }
-
-  public function query($query)
-  {
-    $req = $this->pdo->prepare($query);
-    $req->execute();
-    return $req->fetchAll(PDO::FETCH_ASSOC);
-  }
-
 }
