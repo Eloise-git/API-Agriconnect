@@ -2,14 +2,13 @@
 
 namespace App\services;
 
+use App\models\Service;
 use Exception;
 use PDO;
 
-class AuthService
+class AuthService extends Service
 {
-  private PDO $db;
-
-  public function __construct(PDO $db)
+  public function __construct($db)
   {
     $this->db = $db;
   }

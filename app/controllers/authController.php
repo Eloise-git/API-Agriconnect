@@ -21,11 +21,6 @@ class AuthController extends Controller
     $this->db = new Database();
   }
 
-  /**
-   * Fonction de connexion de l'utilisateur
-   *
-   * @author Antoine
-   */
   public function login(Request $request, Response $response, array $args)
   {
     try {
@@ -55,11 +50,6 @@ class AuthController extends Controller
     }
   }
 
-  /**
-   * Enregistre un nouvel utilisateur dans la base de données.
-   * 
-   * @author Antoine
-   */
   public function register(Request $request, Response $response, array $args)
   {
     try {

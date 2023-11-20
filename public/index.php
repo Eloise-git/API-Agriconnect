@@ -13,14 +13,14 @@ $app->setBasePath("/api-agriconnect");
 $app->addErrorMiddleware(true, true, true);
 
 // Test route
-$app->get('/', controllers\UsersController::class . ':home');
+$app->get('/', controllers\UserController::class . ':home');
 
 // Auth routes
 $app->post('/login', controllers\AuthController::class . ':login');
 $app->post('/register', controllers\AuthController::class . ':register');
 
 // Users routes
-$app->get('/user', controllers\UsersController::class . ':getUser')->add(AuthMiddleware::class);
+$app->get('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
 

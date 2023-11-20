@@ -30,7 +30,8 @@ class AuthMiddleware implements MiddlewareInterface
       return $response;
     } catch (Exception $e) {
       $response = new \Slim\Psr7\Response();
-      return sendJSON($response, "Vous n'êtes pas autorisé à accéder à cette ressource", true, 401);
+      // return sendJSON($response, "Vous n'êtes pas autorisé à accéder à cette ressource", 401);
+      return sendJSON($response, $e->getMessage(), 401);
     }
   }
 }
