@@ -33,6 +33,16 @@ class UserController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+  //`GET /api/users` : Permet d'obtenir la liste des utilisateurs
+  public function getAllUser(Request $request, Response $response, array $args)
+  {
+    try {
+      $users = $this->db->user->getAll();
+      return sendJSON($response, $users, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
   
   //`PUT /api/user/{id}` : Permet de mettre à jour les informations d'un utilisateur
   public function putUser(Request $request, Response $response, array $args)
