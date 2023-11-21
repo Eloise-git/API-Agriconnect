@@ -1,93 +1,101 @@
 <?php
 namespace App\controllers;
 
+use App\models\Controller;
 use App\models\Database;
-use Psr\Http\Product\RequestInterface;
-use Psr\Http\Product\ResponseInterface;
+use Exception;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use function App\lib\sendJSON;
+use function App\lib\sendError;
 
-class ProductController
+require_once __DIR__ . '/../lib/utils.php';
+
+class ProductController extends Controller
 {
-  private $container;
-
-  private $db;
-
-  public function __construct($container)
+  public function __construct()
   {
-    $this->container = $container;
     $this->db = new Database();
   }
 
-  //Permet d'obtenir la liste des produits
-  public function getAllCommandes(RequestInterface $request, ResponseInterface $response, array $args)
+  //`GET /api/products` : Permet d'obtenir la liste des produits
+  public function getAllProducts(Request $request, Response $response, array $args)
   {
     try {
-      $order = $this->db->query('SELECT * FROM commande');
-      $response->getBody()->write(json_encode($order));
-      return $response;
+      $products = $this->db->product->getAll();
+      return sendJSON($response, $products, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
+    }
+  }
+  public function getProduct(Request $request, Response $response,array $args)
+  {
+    try {
+      $product = $request->getAttribute('product');
+      $productId = $product->id;
+      
+      $product = $this->db->product->getProductById($productId);
+
+      return sendJSON($response, $product, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
     }
   }
 
-  //Permet d'obtenir les informations d'un produit
-  public function getACommande(RequestInterface $request, ResponseInterface $response, array $args)
+
+  public function addProduct(Request $request, Response $response,array $args)
   {
     try {
-      $id_orderWanted = $args['id'];
-      $order = $this->db->query("SELECT * FROM commande WHERE id_commande ='$id_commandeWanted");
-      $response->getBody()->write(json_encode($order));
-      return $response;
+      $data = $request->getParsedBody();
+      
+      $id = uniqid();
+      $name = $data['name'] ?? null;
+      $description = $data['description'] ?? null;
+      $type = $data['type'] ?? null;
+      $price = $data['price'] ?? null;
+      $unit = $data['unit'] ?? null;
+      $stock = $data['stock'] ?? null;
+      $id_producer = $data['id_producer'] ?? null;
+      
+      if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$id_producer) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+        
+      }
+
+      $product = $this->db->product->addProduct($id,$name, $description, $type, $price, $unit, $stock, $id_producer);
+
+      return sendJSON($response, $product, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 
-  //Permet d'ajouter un produit
-  public function postCommande(RequestInterface $request, ResponseInterface $response, array $args)
-  {
-    try {
-      $id_orderWanted = $args['id'];
-      $status_orderWanted = $args['status'];
-      $date_orderWanted = $args['date'];
-      $payement_orderWanted = $args['payement'];
-      $id_producer_orderWanted = $args['id_producer'];
-      $id_user_orderWanted = $args['id_user'];
-      $order = $this->db->query("INSERT INTO commande VALUES ($id_orderWanted','$status_orderWanted','$date_orderWanted','$payement_orderWanted','$id_producer_orderWanted','$id_user_orderWanted';");
-      $response->getBody()->write(json_encode($order));
-      return $response;
-    } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
-    }
-  }
 
-  //Permet de mettre à jour les informations d'un produit
-  public function putCommande(RequestInterface $request, ResponseInterface $response, array $args)
+  public function updateProduct(Request $request, Response $response,array $args)
   {
     try {
-      $id_orderWanted = $args['id'];
-      $status_orderWanted = $args['status'];
-      $date_orderWanted = $args['date'];
-      $payement_orderWanted = $args['payement'];
-      $id_producer_orderWanted = $args['id_producer'];
-      $id_user_orderWanted = $args['id_user'];
-      $order = $this->db->query("UPDATE commande SET id_order='$id_orderWanted', status_order='$status_orderWanted', date_order='$date_orderWanted', payement_order='$payement_orderWanted', id_producer='$id_producer_orderWanted', id_user='$id_user_orderWanted';");
-      $response->getBody()->write(json_encode($order));
-      return $response;
-    } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
-    }
-  }
+      $product = $request->getAttribute('product');
+      $productId = $product->id;
+      $rawdata = file_get_contents("php://input");
+      parse_str($rawdata,$data);
+      
+      $name = $data['name'] ?? null;
+      $description = $data['description'] ?? null;
+      $type = $data['type'] ?? null;
+      $price = $data['price'] ?? null;
+      $unit = $data['unit'] ?? null;
+      $stock = $data['stock'] ?? null;
+      
+      if (!$name || !$description || !$type || !$price || !$unit || !$stock) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+        
+      }
 
-  //Permet de supprimer un produit
-  public function deleteCommande(RequestInterface $request, ResponseInterface $response, array $args)
-  {
-    try {
-      $id_orderWanted = $args['id'];
-      $order = $this->db->query("DELETE FROM commande WHERE id_order='$id_orderWanted';");
-      $response->getBody()->write(json_encode($order));
-      return $response;
+      $product = $this->db->product->updateProductById($productId, $name, $description, $type, $price, $unit, $stock);
+
+      return sendJSON($response, $product, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 }

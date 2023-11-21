@@ -4,6 +4,7 @@ namespace App\models;
 
 use App\services\AuthService;
 use App\services\UserService;
+use App\services\ProductService;
 use PDO;
 
 class Database
@@ -11,6 +12,7 @@ class Database
   private PDO $db;
   public $auth;
   public $user;
+  public $product;
 
   public function __construct()
   {
@@ -30,5 +32,6 @@ class Database
 
     $this->auth = new AuthService($this->db);
     $this->user = new UserService($this->db);
+    $this->product = new ProductService($this->db);
   }
 }
