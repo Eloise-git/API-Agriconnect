@@ -34,6 +34,29 @@ class UserService extends Service
       "createdAt" => $user['createdAt_user']
     ];
   }
+  public function getAll(){
+    $sql = "SELECT * FROM utilisateur";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $all = [];
+
+    foreach ($users as $user) {
+        $item = [
+            "id" => $user['id_user'],
+            "name" => $user['firstName_user'],
+            "surname" => $user['lastName_user'],
+            "email" => $user['email_user'],
+            "phone" => $user['phoneNumber_user'],
+            "role" => $user['role_user'],
+            "createdAt" => $user['createdAt_user']
+        ];
+
+        $all[] = $item;
+    }
+
+    return $all;
+  }
 
   public function updateUserById($id,$nom, $prenom, $email, $password, $numero)
   {
