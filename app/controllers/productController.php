@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\lib\sendJSON;
 use function App\lib\sendError;
+use function App\lib\controllers\getProducerById;
 
 require_once __DIR__ . '/../lib/utils.php';
 
@@ -52,7 +53,7 @@ class ProductController extends Controller
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
-      $id_producer = $data['id_producer'] ?? null;
+      $id_producer = getProducerById();
       
       if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$id_producer) {
         throw new Exception("Tous les champs sont obligatoires", 400);

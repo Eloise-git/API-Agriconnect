@@ -20,7 +20,12 @@ class AuthMiddleware implements MiddlewareInterface
       $settings = require __DIR__ . '/../settings/settings.php';
       $key = $settings['settings']['jwt']['secret'];
 
-      $token = $request->getHeader('Authorization')[0];
+      $auth = $request->getHeader('Authorization');
+      if (!$auth) {
+        throw new Exception("Vous n'êtes pas autorisé à accéder à cette ressource", 401);
+      }
+
+      $token = $auth[0];
       $token = explode(" ", $token)[1];
       $decoded = JWT::decode($token, new key($key, 'HS256'));
 
