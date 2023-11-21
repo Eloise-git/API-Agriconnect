@@ -51,9 +51,10 @@ class AuthService extends Service
       throw new Exception("L'utilisateur existe déjà", 409);
     }
 
-    $sql = "INSERT INTO utilisateur (firstName_user, lastName_user, email_user, password_user, phoneNumber_user, role_user) VALUES (:nom, :prenom, :email, :password, :numero, :role)";
+    $sql = "INSERT INTO utilisateur (id_user, firstName_user, lastName_user, email_user, password_user, phoneNumber_user, role_user) VALUES (:id, :nom, :prenom, :email, :password, :numero, :role)";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
+      'id' => uniqid(),
       'nom' => $nom,
       'prenom' => $prenom,
       'email' => $email,

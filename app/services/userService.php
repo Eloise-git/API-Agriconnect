@@ -34,4 +34,35 @@ class UserService extends Service
       "createdAt" => $user['createdAt_user']
     ];
   }
+
+  public function updateUserById($id,$nom, $prenom, $email, $password, $numero)
+  {
+    $sql = "UPDATE utilisateur SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "id" => $id,
+      "name" => $nom,
+      "surname" => $prenom,
+      "email" => $email,
+      "phone" => $numero,
+      "password" => $password,
+    ]);
+
+    $user = $this->getUserById($id);
+    if (!$user) {
+      throw new Exception("Erreur lors de la mise à jour de l'utilisateur : " . implode(", ", $stmt->errorInfo()));
+    }
+    return $user;
+  }
+
+  public function deleteUserById($id)
+  {
+    $sql = "DELETE FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id;
+    DELETE FROM PRODUCTEUR WHERE id_user = :id;
+    DELETE FROM CONTENIR WHERE id_order IN (SELECT id_order FROM COMMANDE WHERE id_user = :id);
+    DELETE FROM COMMANDE WHERE id_user = :id;
+    DELETE FROM UTILISATEUR WHERE id_user = :id;";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['id' => $id]);
+  }
 }

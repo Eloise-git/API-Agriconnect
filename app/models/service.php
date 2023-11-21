@@ -5,5 +5,5 @@ use PDO;
 
 class Service
 {
-  private PDO $db;
+  protected PDO $db;
 }
