@@ -31,7 +31,6 @@ class Database
     $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
     $this->db = new PDO($dsn, $username, $password);
-    var_dump($this->db);
 
     $this->auth = new AuthService($this->db);
     $this->user = new UserService($this->db);
