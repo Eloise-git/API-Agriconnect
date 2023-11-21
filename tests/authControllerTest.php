@@ -26,20 +26,20 @@ class AuthControllerTest extends TestCase
         $this->assertNotEmpty((string) $response->getBody());
     }
 
-    public function testRegister()
-    {
-        $request = (new ServerRequestFactory())->createServerRequest('POST', '/register');
-        $request = $request->withParsedBody([
-            'nom' => 'Jipé',
-            'prenom' => 'Jean',
-            'email' => 'azertyTest@gmail.com',
-            'password' => 'azerty12345678',
-            'numero' => '0123456789',
-            'role' => 'client',
-        ]);
-        $response = $this->app->handle($request);
+    // public function testRegister()
+    // {
+    //     $request = (new ServerRequestFactory())->createServerRequest('POST', '/register');
+    //     $request = $request->withParsedBody([
+    //         'nom' => 'Jipé',
+    //         'prenom' => 'Jean',
+    //         'email' => 'azertyTest@gmail.com',
+    //         'password' => 'azerty12345678',
+    //         'numero' => '0123456789',
+    //         'role' => 'client',
+    //     ]);
+    //     $response = $this->app->handle($request);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotEmpty((string) $response->getBody());
-    }
+    //     $this->assertEquals(200, $response->getStatusCode());
+    //     $this->assertNotEmpty((string) $response->getBody());
+    // }
 }

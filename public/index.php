@@ -25,6 +25,12 @@ $app->post('/user', controllers\UserController::class . ':getUser')->add(AuthMid
 $app->put('/user', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
 $app->delete('/user', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
+//Producers routes
+$app->get('/producers', controllers\ProducerController::class. ':getAllProducer');
+$app->get('/producer/{id}', controllers\ProducerController::class. ':getProducerById');
+$app->post('/producer', controllers\ProducerController::class. ':postProducer');
+$app->put('/producer/{id}', controllers\ProducerController::class. ':putProducer');
+
 // Products routes
 $app->get('/products', controllers\ProductController::class . ':getAllProducts');
 $app->get('/product', controllers\ProductController::class . ':getProduct');
