@@ -4,6 +4,7 @@ namespace App\models;
 
 use App\services\AuthService;
 use App\services\UserService;
+use App\services\ProducerService;
 use PDO;
 
 class Database
@@ -11,6 +12,7 @@ class Database
   private PDO $db;
   public $auth;
   public $user;
+  public $producer;
 
   public function __construct()
   {
@@ -27,8 +29,10 @@ class Database
     $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
     $this->db = new PDO($dsn, $username, $password);
+    var_dump($this->db);
 
     $this->auth = new AuthService($this->db);
     $this->user = new UserService($this->db);
+    $this->producer = new ProducerService($this->db);
   }
 }

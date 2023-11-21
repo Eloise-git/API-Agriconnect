@@ -2,59 +2,54 @@
 namespace App\controllers;
 
 use App\models\Database;
-use Psr\Http\Producer\RequestInterface;
-use Psr\Http\Producer\ResponseInterface;
+use App\models\Controller;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use function App\lib\sendJSON;
+use function App\lib\sendError;
 
-class ProducerController
+require_once __DIR__ . '/../lib/utils.php';
+
+class ProducerController extends Controller
 {
-  private $container;
-
-  private $db;
-
-  public function __construct($container)
+  public function __construct()
   {
-    $this->container = $container;
     $this->db = new Database();
   }
-
-  //Permet d'obtenir la liste des producteurs
-  public function getAllProducer(RequestInterface $request, ResponseInterface $response, array $args)
+  public function getAllProducer(Request $request, Response $response, array $args)
   {
     try {
-      $producer = $this->db->query('SELECT * FROM producer');
-      $response->getBody()->write(json_encode($producer));
-      return $response;
+      $producer = $this->db->producer->getAllProducer();
+
+      return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      var_dump($e->getCode());
+      return sendError($response, $e->getMessage());
     }
   }
 
-  //Permet d'obtenir les informations d'un producteur
-  public function getAProducer(RequestInterface $request, ResponseInterface $response, array $args)
+    public function getProducerById(Request $request, Response $response, array $args)
   {
     try {
-      $id_producerWanted = $args['id'];
-      $producer = $this->db->query("SELECT * FROM producer WHERE id_producer ='$id_producerWanted");
-      $response->getBody()->write(json_encode($producer));
-      return $response;
+
+      $producerWanted = $this->db->producer->getProducerById($args['id']);
+      return sendJSON($response, $producerWanted, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      var_dump($e->getCode());
+      return sendError($response, $e->getMessage());
     }
   }
 
-  //Permet d'ajouter un producteur
-  public function postProducer(RequestInterface $request, ResponseInterface $response, array $args)
+  public function postProducer(Request $request, Response $response, array $args)
   {
     try {
-      $id_producerWanted = $args['id'];
-      $desc_producerWanted = $args['desc'];
-      $payement_producerWanted = $args['payement'];
-      $name_producerWanted = $args['name'];
-      $adress_producerWanted = $args['adress'];
-      $phoneNumber_producerWanted = $args['phoneNumber'];
-      $category_producerWanted = $args['category'];
-      $id_userWanted = $args['id_user'];
-      $producer = $this->db->query("INSERT INTO producer VALUES ($id_producerWanted','$desc_producerWanted','$payement_producerWanted','$adress_producerWanted','$phoneNumber_producerWanted','$category_producerWanted','$id_user_orderWanted';");
+      $producerToInsert = $this->db->producer->postProducer($args['desc'], $args['payement'],
+          $args['name'], $args['adress'], $args['phoneNumber'], $args['category']);
+      return sendJSON($response, $producerToInsert, 200);
+    } catch (Exception $e) {
+      var_dump($e->getCode());
+      return sendError($response, $e->getMessage());
+
       $response->getBody()->write(json_encode($producer));
       return $response;
     } catch (Exception $e) {
@@ -63,7 +58,7 @@ class ProducerController
   }
 
   //Permet de mettre à jour les informations d'un producteur
-  public function putProducer(RequestInterface $request, ResponseInterface $response, array $args)
+  public function putProducer(Request $request, Response $response, array $args)
   {
     try {
       $id_producerWanted = $args['id'];
