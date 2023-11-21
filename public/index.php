@@ -24,7 +24,7 @@ $app->get('/user', controllers\UserController::class . ':getUser')->add(AuthMidd
 $app->get('/users', controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
 $app->post('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->put('/user', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
-$app->delete('/user', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
+$app->delete('/user/{id}', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
 //Producers routes
 $app->get('/producers', controllers\ProducerController::class. ':getAllProducer');
