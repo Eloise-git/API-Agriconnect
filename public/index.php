@@ -8,7 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
-//$app->setBasePath("/api-agriconnect");
+$app->setBasePath("/api-agriconnect");
 
 $app->addErrorMiddleware(true, true, true);
 
