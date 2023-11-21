@@ -39,6 +39,10 @@ $app->get('/product', controllers\ProductController::class . ':getProduct');
 $app->post('/product', controllers\ProductController::class . ':addProduct');
 $app->put('/product', controllers\ProductController::class . ':putProduct');
 
+//Orders routes
+$app->get('/orders', controllers\CommandesController::class. 'getAllProducer');
+$app->get('/order/{id}', controllers\CommandesController::class. 'getACommande');
+
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
 

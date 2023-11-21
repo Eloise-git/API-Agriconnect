@@ -67,5 +67,3 @@ class UserControllerTest extends TestCase
         $this->assertNotEmpty((string) $response->getBody());
     }
 }
-
-   
