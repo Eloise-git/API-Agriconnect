@@ -29,7 +29,8 @@ $app->delete('/user', controllers\UserController::class . ':deleteUser')->add(Au
 $app->get('/producers', controllers\ProducerController::class. ':getAllProducer');
 $app->get('/producer/{id}', controllers\ProducerController::class. ':getProducerById');
 $app->post('/producer', controllers\ProducerController::class. ':postProducer');
-$app->put('/producer/{id}', controllers\ProducerController::class. ':putProducer');
+$app->put('/producer/{id}', controllers\ProducerController::class. ':updateProducerById');
+$app->delete('/producer/{id}', controllers\ProducerController::class. ':deleteProducer');
 
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');

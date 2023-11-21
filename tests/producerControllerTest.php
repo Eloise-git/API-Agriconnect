@@ -31,31 +31,6 @@ class ProducerControllerTest extends TestCase
         $this->assertNotEmpty((string) $response->getBody());
     }
 
-    // public function testPostProducer()
-    // {
-    //     $desc_producerWanted = 'Producteur local de légumes';
-    //     $payement_producerWanted = 'Carte';
-    //     $name_producerWanted = 'BioToo';
-    //     $adress_producerWanted = '405 allée de Ville';
-    //     $phoneNumber_producerWanted = '0525101856';
-    //     $category_producerWanted = 'Légumes';
-
-    //     $request = (new ServerRequestFactory())->createServerRequest('POST', '/producer');
-    //     $response = $this->app->handle($request);
-
-    //     $this->assertNotEmpty((string) $response->getBody());
-    // }
-
-    public function testPutProducer()
-    {
-        $id_producerWanted = 'p1';
-
-        $request = (new ServerRequestFactory())->createServerRequest('PUT', "/producer/$id_producerWanted");
-        $response = $this->app->handle($request);
-
-        $this->assertNotEmpty((string) $response->getBody());
-    }
-
     // public function testPostProducer(){
     //     $id_producerWanted = 'p11';
     //     $desc_producerWanted = 'Producteur local de légumes';
@@ -69,7 +44,24 @@ class ProducerControllerTest extends TestCase
     //     $request = (new ServerRequestFactory())->createServerRequest('POST', '/producer');
     //     $response = $this->app->handle($request);
 
-    //     $this->assertEquals(200, $response->getStatusCode());
     //     $this->assertNotEmpty((string) $response->getBody());
     // }
+
+    // public function testUpdateProducerById()
+    // {
+    //     $request = (new ServerRequestFactory())->createServerRequest('PUT', "/producer/$id_producerWanted");
+    //     $response = $this->app->handle($request);
+
+    //     $this->assertNotEmpty((string) $response->getBody());
+    // }
+
+    public function testDeleteProducer()
+    {
+        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/producer')
+            ->withHeader('Authorization', 'Bearer ' . $this->userToken);
+        $response = $this->app->handle($request);
+
+        $this->assertNotEmpty((string) $response->getBody());
+    }
+
 }

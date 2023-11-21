@@ -31,7 +31,6 @@ class ProducerController extends Controller
     public function getProducerById(Request $request, Response $response, array $args)
   {
     try {
-
       $producerWanted = $this->db->producer->getProducerById($args['id']);
       return sendJSON($response, $producerWanted, 200);
     } catch (Exception $e) {
@@ -49,44 +48,48 @@ class ProducerController extends Controller
     } catch (Exception $e) {
       var_dump($e->getCode());
       return sendError($response, $e->getMessage());
-
-      $response->getBody()->write(json_encode($producer));
-      return $response;
-    } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
     }
   }
 
-  //Permet de mettre à jour les informations d'un producteur
   public function putProducer(Request $request, Response $response, array $args)
   {
     try {
-      $id_producerWanted = $args['id'];
-      $desc_producerWanted = $args['desc'];
-      $payement_producerWanted = $args['payement'];
-      $name_producerWanted = $args['name'];
-      $adress_producerWanted = $args['adress'];
-      $phoneNumber_producerWanted = $args['phoneNumber'];
-      $category_producerWanted = $args['category'];
-      $id_userWanted = $args['id_user'];
-      $producer = $this->db->query("UPDATE producer SET id_producer='$id_producerWanted', desc_producer='$desc_producerWanted', payement_producer='$payement_orderWanted', name_producer='$name_producerWanted', adress_producer='$adress_producerWanted', phoneNumber_producer='$phoneNumber_producerWanted', category_producer='$category_producerWanted', id_user=' $id_userWanted';");
-      $response->getBody()->write(json_encode($producer));
-      return $response;
+      $producer = $request->getAttribute('producer');
+      $producerId = $producer->id;
+      $producerId_user = $producer->id_user;
+      $rawdata = file_get_contents("php://input");
+      parse_str($rawdata,$data);
+      
+      $desc = $data['desc'] ?? null;
+      $payement = $data['payement'] ?? null;
+      $name = $data['name'] ?? null;
+      $adress = $data['adress'] ?? null;
+      $phoneNumber = $data['phoneNumber'] ?? null;
+      $category = $data['category'] ?? null;
+      
+      if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+      $producer = $this->db->producer->updateProducerById($producerId, $desc, $payement, $name, $adress,
+          $phoneNumber, $category, $producerId_user);
+
+      return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 
-  //Permet de supprimer un producteur
-  public function deleteProducer(RequestInterface $request, ResponseInterface $response, array $args)
+  public function deleteProducer(Request $request, Response $response, array $args)
   {
     try {
-      $id_producerWanted = $args['id'];
-      $producer = $this->db->query("DELETE FROM producer WHERE id_producer='$id_producerWanted';");
-      $response->getBody()->write(json_encode($producer));
-      return $response;
+      $producer = $request->getAttribute('producer');
+      $producerId = $producer->id;
+
+      $this->db->producer->deleteProducerById($producerId);
+
+      return sendJSON($response, "Le producteur a bien été supprimé", 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 }
