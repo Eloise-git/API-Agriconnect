@@ -49,7 +49,9 @@ class UserService extends Service
     ]);
 
     $user = $this->getUserById($id);
-
+    if (!$user) {
+      throw new Exception("Erreur lors de la mise à jour de l'utilisateur : " . implode(", ", $stmt->errorInfo()));
+    }
     return $user;
   }
 
