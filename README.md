@@ -29,6 +29,7 @@ L'API de AgriConnect permet de gérer les données de l'application AgriConnect 
 
 ### Utilisateurs
 
+- `GET /api/user` : Permet d'obtenir les informations de l'utilisateur actuellement connecté
 - `GET /api/user/{id}` : Permet d'obtenir les informations d'un utilisateur
 - `GET /api/users` : Permet d'obtenir la liste des utilisateurs
 - `PUT /api/user/{id}` : Permet de mettre à jour les informations d'un utilisateur

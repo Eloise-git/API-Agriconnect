@@ -49,7 +49,8 @@ $app->post('/login', controllers\AuthController::class . ':login');
 $app->post('/register', controllers\AuthController::class . ':register');
 
 // Users routes
-$app->get('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
+$app->get('/user', controllers\UserController::class . ':getCurrentUser')->add(AuthMiddleware::class);
+$app->get('/user/{id}', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->get('/users', controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
 $app->post('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->put('/user/{id}', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);

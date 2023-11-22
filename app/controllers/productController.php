@@ -32,7 +32,7 @@ class ProductController extends Controller
   public function getProduct(Request $request, Response $response,array $args)
   {
     try {
-      $product = $this->db->product->getProductById($$args['id']);
+      $product = $this->db->product->getProductById($args['id']);
 
       return sendJSON($response, $product, 200);
     } catch (Exception $e) {
