@@ -41,6 +41,5 @@ class Database
     $this->producer = new ProducerService($this->db);
     $this->product = new ProductService($this->db);
     $this->order = new CommandeService($this->db);
-    $this->message = new MessagerieService($this->db);
   }
 }

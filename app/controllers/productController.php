@@ -29,10 +29,13 @@ class ProductController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+
+
   public function getProduct(Request $request, Response $response,array $args)
   {
     try {
-      $product = $this->db->product->getProductById($args['id']);
+      $userId = $args['id'];
+      $product = $this->db->product->getProductById($userId);
 
       return sendJSON($response, $product, 200);
     } catch (Exception $e) {
@@ -53,7 +56,7 @@ class ProductController extends Controller
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
-      $id_producer = getProducerById();
+      $id_producer = $data['id_producer'] ?? null;
       
       if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$id_producer) {
         throw new Exception("Tous les champs sont obligatoires", 400);
