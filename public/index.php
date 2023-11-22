@@ -52,7 +52,7 @@ $app->post('/register', controllers\AuthController::class . ':register');
 $app->get('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->get('/users', controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
 $app->post('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
-$app->put('/user', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
+$app->put('/user/{id}', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
 $app->delete('/user/{id}', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
 //Producers routes

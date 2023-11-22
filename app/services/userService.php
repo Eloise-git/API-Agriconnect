@@ -80,11 +80,7 @@ class UserService extends Service
 
   public function deleteUserById($id)
   {
-    $sql = "DELETE FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id;
-    DELETE FROM PRODUCTEUR WHERE id_user = :id;
-    DELETE FROM CONTENIR WHERE id_order IN (SELECT id_order FROM COMMANDE WHERE id_user = :id);
-    DELETE FROM COMMANDE WHERE id_user = :id;
-    DELETE FROM UTILISATEUR WHERE id_user = :id;";
+    $sql = "DELETE FROM UTILISATEUR WHERE id_user = :id;";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['id' => $id]);
   }

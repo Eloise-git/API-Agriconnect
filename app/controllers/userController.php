@@ -48,8 +48,7 @@ class UserController extends Controller
   public function putUser(Request $request, Response $response, array $args)
   {
     try {
-      $user = $request->getAttribute('user');
-      $userId = $user->id;
+      $userId = $args['id'];
       $rawdata = file_get_contents("php://input");
       parse_str($rawdata,$data);
       
@@ -77,8 +76,7 @@ class UserController extends Controller
   public function deleteUser(Request $request, Response $response, array $args)
   {
     try {
-      $user = $request->getAttribute('user');
-      $userId = $user->id;
+      $userId = $args['id'];
 
       $this->db->user->deleteUserById($userId);
 
