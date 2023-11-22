@@ -7,8 +7,8 @@ use App\services\UserService;
 use App\services\ProducerService;
 use App\services\ProductService;
 use App\services\CommandeService;
-use App\Service\MessagerieService;
-use App\Service\StockService;
+use App\services\MessagerieService;
+use App\services\StockService;
 use PDO;
 
 class Database
