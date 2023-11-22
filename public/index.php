@@ -77,11 +77,13 @@ $app->delete('/order/{id}', controllers\CommandesController::class . 'deleteComm
 
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
-
+$app->get('/message/{id}', controllers\MessagerieController::class . ':getAMessage');
+$app->post('/message', controllers\MessagerieController::class . ':postMessage');
+$app->delete('/message/{id}', controllers\MessagerieController::class . ':deleteMessage');
 
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-  throw new HttpNotFoundException($request);
+    throw new HttpNotFoundException($request);
 });
 $app->run();
 
