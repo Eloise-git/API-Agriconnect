@@ -2,6 +2,10 @@
 
 use Slim\Factory\AppFactory;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Routing\RouteContext;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface;
 use App\controllers;
 use App\middlewares\AuthMiddleware;
 
@@ -13,17 +17,29 @@ $app->setBasePath("/api-agriconnect");
 
 $app->addErrorMiddleware(true, true, true);
 
+$app->addBodyParsingMiddleware();
+
 $app->options('/{routes:.+}', function ($request, $response, $args) {
   return $response;
 });
 
-$app->add(function ($request, $handler) {
+// This middleware will append the response header Access-Control-Allow-Methods with all allowed methods
+$app->add(function (Request $request, RequestHandlerInterface $handler): Response {
+  $routeContext = RouteContext::fromRequest($request);
+  $routingResults = $routeContext->getRoutingResults();
+  $methods = $routingResults->getAllowedMethods();
+  $requestHeaders = $request->getHeaderLine('Access-Control-Request-Headers');
+
   $response = $handler->handle($request);
-  return $response
-          ->withHeader('Access-Control-Allow-Origin', 'http://mysite')
-          ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-          ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+
+  $response = $response->withHeader('Access-Control-Allow-Origin', '*');
+  $response = $response->withHeader('Access-Control-Allow-Methods', implode(',', $methods));
+  $response = $response->withHeader('Access-Control-Allow-Headers', $requestHeaders);
+
+  return $response;
 });
+
+$app->addRoutingMiddleware();
 
 // Test route
 $app->get('/', controllers\UserController::class . ':home');
@@ -40,11 +56,11 @@ $app->put('/user', controllers\UserController::class . ':putUser')->add(AuthMidd
 $app->delete('/user/{id}', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
 //Producers routes
-$app->get('/producers', controllers\ProducerController::class. ':getAllProducer');
-$app->get('/producer/{id}', controllers\ProducerController::class. ':getProducerById');
-$app->post('/producer', controllers\ProducerController::class. ':postProducer');
-$app->put('/producer/{id}', controllers\ProducerController::class. ':updateProducerById');
-$app->delete('/producer/{id}', controllers\ProducerController::class. ':deleteProducer');
+$app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
+$app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
+$app->post('/producer', controllers\ProducerController::class . ':postProducer');
+$app->put('/producer/{id}', controllers\ProducerController::class . ':updateProducerById');
+$app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
 
 // Products routes
 $app->get('/products', controllers\ProductController::class . ':getAllProducts');
@@ -53,8 +69,8 @@ $app->post('/product', controllers\ProductController::class . ':addProduct');
 $app->put('/product', controllers\ProductController::class . ':putProduct');
 
 //Orders routes
-$app->get('/orders', controllers\CommandesController::class. 'getAllProducer');
-$app->get('/order/{id}', controllers\CommandesController::class. 'getACommande');
+$app->get('/orders', controllers\CommandesController::class . 'getAllProducer');
+$app->get('/order/{id}', controllers\CommandesController::class . 'getACommande');
 
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
