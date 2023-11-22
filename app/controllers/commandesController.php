@@ -2,7 +2,6 @@
 namespace App\controllers;
 
 use App\models\Database;
-use App\models\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\lib\sendJSON;

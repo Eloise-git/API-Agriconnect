@@ -1,6 +1,7 @@
 <?php
 
 use Slim\Factory\AppFactory;
+use Slim\Exception\HttpNotFoundException;
 use App\controllers;
 use App\middlewares\AuthMiddleware;
 
@@ -11,6 +12,18 @@ $app = AppFactory::create();
 $app->setBasePath("/api-agriconnect");
 
 $app->addErrorMiddleware(true, true, true);
+
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+  return $response;
+});
+
+$app->add(function ($request, $handler) {
+  $response = $handler->handle($request);
+  return $response
+          ->withHeader('Access-Control-Allow-Origin', 'http://mysite')
+          ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+          ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});
 
 // Test route
 $app->get('/', controllers\UserController::class . ':home');
@@ -49,6 +62,11 @@ $app->delete('/order/{id}', controllers\CommandesController::class. 'deleteComma
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
 
+
+// Last route
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
+  throw new HttpNotFoundException($request);
+});
 $app->run();
 
 return $app;

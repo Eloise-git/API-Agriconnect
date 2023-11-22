@@ -6,7 +6,7 @@ use App\services\AuthService;
 use App\services\UserService;
 use App\services\ProducerService;
 use App\services\ProductService;
-use App\services\CommandesService;
+use App\services\CommandeService;
 use PDO;
 
 class Database
@@ -38,6 +38,6 @@ class Database
     $this->user = new UserService($this->db);
     $this->producer = new ProducerService($this->db);
     $this->product = new ProductService($this->db);
-    $this->order = new CommandesService($this->db);
+    $this->order = new CommandeService($this->db);
   }
 }
