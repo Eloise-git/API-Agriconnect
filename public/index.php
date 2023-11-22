@@ -81,6 +81,10 @@ $app->get('/message/{id}', controllers\MessagerieController::class . ':getAMessa
 $app->post('/message', controllers\MessagerieController::class . ':postMessage');
 $app->delete('/message/{id}', controllers\MessagerieController::class . ':deleteMessage');
 
+//Stocks routes
+$app->get('/stocks', controllers\StockController::class . 'getAllStocks');
+$app->put('/stocks', controllers\StockController::class . 'putStock');
+
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
     throw new HttpNotFoundException($request);
