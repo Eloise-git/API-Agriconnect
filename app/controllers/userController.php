@@ -19,8 +19,8 @@ class UserController extends Controller
     $this->db = new Database();
   }
 
-  //- `GET /api/user/{id}` : Permet d'obtenir les informations d'un utilisateur
-  public function getUser(Request $request, Response $response, array $args)
+  //- `GET /api/user` : Permet d'obtenir les informations de l'utilisateur actuellement connecté
+  public function getCurrentUser(Request $request, Response $response, array $args)
   {
     try {
       $user = $request->getAttribute('user');
@@ -33,6 +33,23 @@ class UserController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+  
+
+  //- `GET /api/user/{id}` : Permet d'obtenir les informations d'un utilisateur
+  public function getUser(Request $request, Response $response, array $args)
+  {
+    try {
+      $userId = $args['id'];
+      
+      $user = $this->db->user->getUserById($userId);
+
+      return sendJSON($response, $user, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+
+
   //`GET /api/users` : Permet d'obtenir la liste des utilisateurs
   public function getAllUser(Request $request, Response $response, array $args)
   {
