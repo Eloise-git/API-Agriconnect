@@ -6,6 +6,7 @@ use App\services\AuthService;
 use App\services\UserService;
 use App\services\ProducerService;
 use App\services\ProductService;
+use App\services\CommandeService;
 use PDO;
 
 class Database
@@ -15,6 +16,7 @@ class Database
   public $user;
   public $producer;
   public $product;
+  public $order;
 
   public function __construct()
   {
@@ -36,5 +38,6 @@ class Database
     $this->user = new UserService($this->db);
     $this->producer = new ProducerService($this->db);
     $this->product = new ProductService($this->db);
+    $this->order = new CommandeService($this->db);
   }
 }

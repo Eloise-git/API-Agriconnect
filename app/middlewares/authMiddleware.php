@@ -8,6 +8,8 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Server\MiddlewareInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
+use function App\lib\sendError;
 use function App\lib\sendJSON;
 
 require_once __DIR__ . '/../lib/utils.php';
@@ -20,7 +22,12 @@ class AuthMiddleware implements MiddlewareInterface
       $settings = require __DIR__ . '/../settings/settings.php';
       $key = $settings['settings']['jwt']['secret'];
 
-      $token = $request->getHeader('Authorization')[0];
+      $auth = $request->getHeader('Authorization');
+      if (!$auth) {
+        throw new Exception("Vous n'êtes pas autorisé à accéder à cette ressource", 401);
+      }
+
+      $token = $auth[0];
       $token = explode(" ", $token)[1];
       $decoded = JWT::decode($token, new key($key, 'HS256'));
 
@@ -30,7 +37,7 @@ class AuthMiddleware implements MiddlewareInterface
       return $response;
     } catch (Exception $e) {
       $response = new \Slim\Psr7\Response();
-      return sendJSON($response, "Vous n'êtes pas autorisé à accéder à cette ressource", 401);
+      return sendError($response, "Vous n'êtes pas autorisé à accéder à cette ressource", 401);
     }
   }
 }
