@@ -6,7 +6,7 @@ use App\models\Service;
 use Exception;
 use PDO;
 
-class CommandesService extends Service
+class CommandeService extends Service
 {
     public function __construct($db)
     {
