@@ -23,7 +23,7 @@ class CommandeService extends Service
         return $orders;
     }
 
-    public function getAnOrder($id)
+    public function getAnOrderById($id)
     {
         $sql = "SELECT * FROM `commande` WHERE id_order = :id";
         $stmt = $this->db->prepare($sql);
@@ -33,71 +33,56 @@ class CommandeService extends Service
         return $order;
     }
 
-    // public function getProducerById($id)
-    // {
-    //     $sql = "SELECT * FROM `producteur` WHERE id_producer = :id";
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->execute(['id' => $id]);
-    //     $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function postOrder($id_orderWanted, $status_orderWanted, 
+                $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)
+    {
+        $sql = "INSERT INTO commande (id_order, status_order, date_order, payement_order, id_producer, id_user) 
+                VALUES (':id_order',':status', ':date',':payement',':id_producer',':id_user';";
 
-    //     return $aProducer;
-    // }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id_order' => $id_orderWanted,
+            'status' => $status_orderWanted,
+            'date' => $date_orderWanted,
+            'payement' => $payement_orderWanted,
+            'id_producer' => $id_producer_orderWanted,
+            'id_user' => $id_user_orderWanted
+            ]);
+        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($order) {
+            throw new Exception("La commande existe déjà", 409);
+        }
+        return $order;
+    }
 
-    // public function postProducer($desc_producerWanted, $payement_producerWanted, 
-    //             $name_producerWanted, $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted)
-    // {
-    //     $sql = "INSERT INTO producer (desc_producer, payement_producer, name_producer, adress_producer, phoneNumber_producer, category_producer) 
-    //             VALUES (':desc',':payement', ':name',':adress',':phone',':category';";
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->execute([
-    //         'desc' => $desc_producerWanted,
-    //         'payement' => $payement_producerWanted,
-    //         'name' => $name_producerWanted,
-    //         'adress' => $adress_producerWanted,
-    //         'phone' => $phoneNumber_producerWanted,
-    //         'category' => $category_producerWanted
-    //         ]);
-    //     $producer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //     if ($producer) {
-    //         throw new Exception("Le producteur existe déjà", 409);
-    //     }
-    //     return $producer;
-    // }
+    public function updateOrderById($id_orderWanted, $status_orderWanted, 
+    $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)
+    {
+        $sql = "UPDATE commmande SET (status_order=':status', 
+            date_order=':date', payement_order=':payement', 
+            id_producer=':id_producer', id_user=':id_user';) WHERE id_order = :id_order";
 
-    // public function updateProducerById($id_producer, $desc_producerWanted, $payement_producerWanted, $name_producerWanted, 
-    //     $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted, $id_user)
-    // {
-    //     $sql = "UPDATE producer SET (desc_producer=':desc', 
-    //         payement_producer=':payement', name_producer=':name', 
-    //         adress_producer=':adress', phoneNumber_producer=':phone', 
-    //         category_producer=':category';) WHERE id_producer = :id_producer AND id_user = :id_user";
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->execute([
-    //         'desc' => $desc_producerWanted,
-    //         'payement' => $payement_producerWanted,
-    //         'name' => $name_producerWanted,
-    //         'adress' => $adress_producerWanted,
-    //         'phone' => $phoneNumber_producerWanted,
-    //         'category' => $category_producerWanted,
-    //         'id_producer' => $id_producer,
-    //         'id_user' => $id_user
-    //     ]);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'status_order' => $status_orderWanted,
+            'date_order' => $date_orderWanted,
+            'payement_order' => $payement_orderWanted,
+            'id_producer' => $id_producer_orderWanted,
+            'id_user' => $id_user_orderWanted,
+            'id_order' => $id_orderWanted
+        ]);
 
-    //     $producer = $this->getProducerById($id_producer);
-    //     if (!$producer) {
-    //     throw new Exception("Erreur lors de la mise à jour du producteur : " . implode(", ", $stmt->errorInfo()));
-    //     }
-    //     return $producer;
-    // }
+        $order = $this->getOrderById($id_orderWanted);
+        if (!$order) {
+        throw new Exception("Erreur lors de la mise à jour de la commande : " . implode(", ", $stmt->errorInfo()));
+        }
+        return $order;
+    }
 
-    // public function deleteProducerById($id)
-    // {
-    //     $sql = "DELETE FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id;
-    //     DELETE FROM PRODUCTEUR WHERE id_user = :id;
-    //     DELETE FROM CONTENIR WHERE id_order IN (SELECT id_order FROM COMMANDE WHERE id_user = :id);
-    //     DELETE FROM COMMANDE WHERE id_user = :id;
-    //     DELETE FROM UTILISATEUR WHERE id_user = :id;";
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->execute(['id' => $id]);
-    // }
+    public function deleteOrderById($id)
+    {
+        $sql = "DELETE FROM COMMANDE WHERE id_order = :id;";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+    }
 }
