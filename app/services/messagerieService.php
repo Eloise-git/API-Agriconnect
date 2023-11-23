@@ -61,7 +61,7 @@ class MessagerieService extends Service
 
     public function deleteUserById($id)
     {
-        $sql = "DELETE FROM MESSAGERIE WHERE id_message = :id;";
+        $sql = "DELETE FROM messagerie WHERE id_message = :id;";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
     }

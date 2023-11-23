@@ -42,13 +42,29 @@ class ProducerController extends Controller
   public function postProducer(Request $request, Response $response, array $args)
   {
     try {
-      $producerToInsert = $this->db->producer->postProducer($args['desc'], $args['payement'],
-          $args['name'], $args['adress'], $args['phoneNumber'], $args['category']);
-      return sendJSON($response, $producerToInsert, 200);
-    } catch (Exception $e) {
-      var_dump($e->getCode());
-      return sendError($response, $e->getMessage());
-    }
+        $producer = $request->getAttribute('producer');
+        $producerId = $producer->id;
+        $producerId_user = $producer->id_user;
+        $rawdata = file_get_contents("php://input");
+        parse_str($rawdata,$data);
+        
+        $desc = $data['desc'] ?? null;
+        $payement = $data['payement'] ?? null;
+        $name = $data['name'] ?? null;
+        $adress = $data['adress'] ?? null;
+        $phoneNumber = $data['phoneNumber'] ?? null;
+        $category = $data['category'] ?? null;
+        
+        if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
+          throw new Exception("Tous les champs sont obligatoires", 400);
+        }
+        $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
+            $phoneNumber, $category, $producerId_user);
+  
+        return sendJSON($response, $producer, 200);
+      } catch (Exception $e) {
+        return sendError($response, $e->getMessage());
+      }
   }
 
   public function putProducer(Request $request, Response $response, array $args)
@@ -82,10 +98,8 @@ class ProducerController extends Controller
   public function deleteProducer(Request $request, Response $response, array $args)
   {
     try {
-      $producer = $request->getAttribute('producer');
-      $producerId = $producer->id;
 
-      $this->db->producer->deleteProducerById($producerId);
+      $this->db->producer->deleteProducerById($args['id']);
 
       return sendJSON($response, "Le producteur a bien été supprimé", 200);
     } catch (Exception $e) {
