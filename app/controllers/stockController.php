@@ -10,6 +10,7 @@ use function App\lib\sendJSON;
 use function App\lib\sendError;
 
 require_once __DIR__ . '/../lib/utils.php';
+
 class StockController extends Controller
 {
   public function __construct()
@@ -20,12 +21,15 @@ class StockController extends Controller
   public function getAllStock(Request $request, Response $response, array $args)
   {
     try {
-      $stock = $this->db->stock->getAllStock($args['id_producer']);
+      $user = $request->getAttribute('user');
+      $userId=$user->id;
 
-      $response->getBody()->write(json_encode($stock));
-      return $response;
+      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $stock = $this->db->stock->getAllStock($id_producer);
+      
+      return sendJSON($response, $stock, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 

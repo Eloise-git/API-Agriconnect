@@ -84,8 +84,8 @@ $app->post('/message', controllers\MessagerieController::class . ':postMessage')
 $app->delete('/message/{id}', controllers\MessagerieController::class . ':deleteMessage');
 
 //Stocks routes
-$app->get('/stocks', controllers\StockController::class . 'getAllStocks');
-$app->put('/stocks', controllers\StockController::class . 'putStock');
+$app->get('/stocks', controllers\StockController::class . ':getAllStock')->add(AuthMiddleware::class);
+$app->get('/stock/{id}', controllers\StockController::class . ':getAStock');
 
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
