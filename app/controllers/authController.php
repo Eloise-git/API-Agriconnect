@@ -67,7 +67,8 @@ class AuthController extends Controller
       }
 
       $hashedPassword = hashPassword($password);
-      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $role);
+      $createdAt = date('Y-m-d');
+      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero,$createdAt, $role);
 
       return sendJSON($response, $newuser, 200);
     } catch (Exception $e) {

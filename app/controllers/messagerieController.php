@@ -44,7 +44,21 @@ class MessagerieController extends Controller
   public function postMessage(Request $request, Response $response, array $args)
   {
     try {
-      $message = $this->db->message->postMessage($args['id'], $args['date'], $args['content'], $args['id_user'], $args['id_user1']);
+      
+      $user = $request->getAttribute('user');
+      $userId = $user->id;
+
+      $body = $request->getParsedBody();
+      $idmes = uniqid();
+      $date = date('Y-m-d H:i:s');
+      $content = $body['message'];
+      $id_user1 = $body['destinataire'];
+
+      if (!$id_user1 || !$content) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+      
+      $message = $this->db->message->postMessage($idmes, $date, $content, $userId, $id_user1);
 
       return sendJSON($response, $message, 200);
     } catch (Exception $e) {

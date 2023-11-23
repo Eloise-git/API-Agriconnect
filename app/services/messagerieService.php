@@ -37,26 +37,20 @@ class MessagerieService extends Service
         return $message;
     }
 
-    public function postMessage($id, $date, $content, $id_user, $id_user1)
+    public function postMessage($id, $date, $content, $userId, $id_user1)
     {
-
-
-    $sql = "INSERT INTO messagerie (id_message, date_message, content_message, id_user, id_user1) 
-        VALUES (':id_message',':date_message', ':content_message',':id_user',':id_user1';";
+    $sql = "INSERT INTO messagerie (id_message, date_message, content_message, id_user, id_user_1) VALUES (:id_message, :date_message, :content_message, :id_user, :id_user1)";
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
     'id_message' => $id,
     'date_message' => $date,
     'content_message' => $content,
-    'id_user' => $id_user,
+    'id_user' => $userId,
     'id_user1' => $id_user1
     ]);
     $message = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if ($message) {
-    throw new Exception("Le message existe déjà", 409);
-    }
-    return $message;
+    return $this->getAMessageById($id);
     }
 
 

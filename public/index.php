@@ -80,7 +80,7 @@ $app->delete('/order/{id}', controllers\CommandesController::class . 'deleteComm
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
 $app->get('/message/{id}', controllers\MessagerieController::class . ':getAMessage');
-$app->post('/message', controllers\MessagerieController::class . ':postMessage');
+$app->post('/message', controllers\MessagerieController::class . ':postMessage')->add(AuthMiddleware::class);
 $app->delete('/message/{id}', controllers\MessagerieController::class . ':deleteMessage');
 
 //Stocks routes
