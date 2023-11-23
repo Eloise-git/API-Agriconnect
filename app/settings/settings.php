@@ -24,7 +24,7 @@ return [
 
     // jwt settings
     'jwt' => [
-      'secret' => "NyzYCdx0L05e0Zwau08UDrKu4VtFcr5sxsvfJSOSi/Y=",
+      'secret' => "sMNQd-vlbGoZHOzNONvffK-C3CJ0WstuyFTinbIrvW-wW-Nz9UfGF8DgCKTgfyHStoQkRCMr442MJrXUSBI8ZA",
     ],
   ],
 ];

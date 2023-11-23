@@ -45,7 +45,6 @@ class AuthController extends Controller
 
       return sendJSON($response, $res, 200);
     } catch (Exception $e) {
-      var_dump($e->getCode());
       return sendError($response, $e->getMessage());
     }
   }
