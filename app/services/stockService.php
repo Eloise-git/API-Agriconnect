@@ -15,7 +15,7 @@ class StockService extends Service
 
     public function getAllStock($id_producer)
     {
-        $sql = "SELECT * FROM `produit` WHERE id_producer = :id_producer";
+        $sql = "SELECT *,COUNT(id_order)AS 'Reservés' FROM `produit` JOIN contenir ON contenir.id_product=produit.id_product WHERE id_producer = :id_producer GROUP BY contenir.id_product";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_producer' => $id_producer]);
         $stocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
