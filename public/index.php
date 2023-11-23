@@ -60,7 +60,7 @@ $app->delete('/user/{id}', controllers\UserController::class . ':deleteUser')->a
 $app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
 $app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
 $app->post('/producer', controllers\ProducerController::class . ':postProducer');
-$app->put('/producer/{id}', controllers\ProducerController::class . ':updateProducerById');
+$app->put('/producer/{id}', controllers\ProducerController::class . ':putProducer');
 $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
 
 // Products routes
