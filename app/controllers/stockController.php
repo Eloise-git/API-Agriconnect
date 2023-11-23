@@ -36,8 +36,15 @@ class StockController extends Controller
   public function putStock(Request $request, Response $response, array $args)
   {
     try {
-      $stock = $this->db->stock->updateStockById($args['id_product'], $args['name_product'], $args['desc_product'], 
-            $args['type_product'], $args['price_product'], $args['unit_product'], $args['stock_product'], $args['id_producer']);
+      $user = $request->getAttribute('user');
+      $userId=$user->id;
+      $id_product = $args['id'];
+      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $rawdata = file_get_contents("php://input");
+      parse_str($rawdata,$data);
+      
+      $stock_data = $data['name'] ?? null;
+      $stock = $this->db->stock->updateStockById($id_product);
 
       $response->getBody()->write(json_encode($stock));
       return $response;
