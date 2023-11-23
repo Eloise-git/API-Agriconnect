@@ -71,8 +71,18 @@ class CommandesController extends Controller
   public function putCommande(Request $request, Response $response, array $args)
   {
     try {
-      $order = $this->db->order->updateOrderById($args['id'], $args['status'], $args['date'], 
-            $args['payement'], $args['id_producer'], $args['id_user']);
+
+      $id_order = $args['id'];
+      $rawdata = file_get_contents("php://input");
+      parse_str($rawdata,$data);
+      
+      $status = $data['status'] ?? null;
+      $date = $data['date'] ?? null;
+      $payement = $data['payement'] ?? null;
+      $id_producer = $data['id_producer'] ?? null;
+      $id_user = $data['id_user'] ?? null;
+
+      $order = $this->db->order->updateOrderById($id_order, $status, $date, $payement, $id_producer, $id_user);
 
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {
@@ -84,11 +94,13 @@ class CommandesController extends Controller
   public function deleteCommande(Request $request, Response $response, array $args)
   {
     try {
-      $order = $this->db->order->deleteOrderById($args['id']);
+      
+      $id_order = $args['id'];
 
-      return sendJSON($response, $order, 200);
+      $this->db->order->deleteOrderById($id_order);
+
+      return sendJSON($response, "La commande a bien été supprimée", 200);
     } catch (Exception $e) {
-      var_dump($e->getCode());
       return sendError($response, $e->getMessage());
     }
   }
