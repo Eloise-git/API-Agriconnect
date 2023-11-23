@@ -40,7 +40,6 @@ function generateToken($userId, $userRole)
       $jwt = JWT::encode($payload, $key, 'HS256');
       return $jwt;
 }
-
 function hashPassword($password)
 {
   return hash('sha256', $password);
