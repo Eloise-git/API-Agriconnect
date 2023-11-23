@@ -23,9 +23,8 @@ class StockController extends Controller
     try {
       $user = $request->getAttribute('user');
       $userId=$user->id;
-      
+
       $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
-      var_dump($id_producer);
       $stock = $this->db->stock->getAllStock($id_producer);
       
       return sendJSON($response, $stock, 200);
