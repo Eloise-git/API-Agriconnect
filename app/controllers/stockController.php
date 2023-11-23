@@ -1,19 +1,19 @@
 <?php
 namespace App\controllers;
 
+use App\models\Controller;
 use App\models\Database;
-use Psr\Http\Stock\RequestInterface;
-use Psr\Http\Stock\ResponseInterface;
+use Exception;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use function App\lib\sendJSON;
+use function App\lib\sendError;
 
-class StockController
+require_once __DIR__ . '/../lib/utils.php';
+class StockController extends Controller
 {
-  private $container;
-
-  private $db;
-
-  public function __construct($container)
+  public function __construct()
   {
-    $this->container = $container;
     $this->db = new Database();
   }
 
