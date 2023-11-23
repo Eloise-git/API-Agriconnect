@@ -47,6 +47,9 @@ class ProductController extends Controller
   public function addProduct(Request $request, Response $response,array $args)
   {
     try {
+      
+      $user = $request->getAttribute('user');
+      $userId = $user->id;
       $data = $request->getParsedBody();
       
       $id = uniqid();
@@ -56,11 +59,10 @@ class ProductController extends Controller
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
-      $id_producer = $data['id_producer'] ?? null;
-      
-      if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$id_producer) {
+      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+
+      if (!$name || !$description || !$type || !$price || !$unit || !$stock ) {
         throw new Exception("Tous les champs sont obligatoires", 400);
-        
       }
 
       $product = $this->db->product->addProduct($id,$name, $description, $type, $price, $unit, $stock, $id_producer);
@@ -75,8 +77,7 @@ class ProductController extends Controller
   public function updateProduct(Request $request, Response $response,array $args)
   {
     try {
-      $product = $request->getAttribute('product');
-      $productId = $product->id;
+      $productId = $args['id'];
       $rawdata = file_get_contents("php://input");
       parse_str($rawdata,$data);
       
@@ -89,7 +90,6 @@ class ProductController extends Controller
       
       if (!$name || !$description || !$type || !$price || !$unit || !$stock) {
         throw new Exception("Tous les champs sont obligatoires", 400);
-        
       }
 
       $product = $this->db->product->updateProductById($productId, $name, $description, $type, $price, $unit, $stock);

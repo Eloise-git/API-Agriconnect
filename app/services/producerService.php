@@ -29,9 +29,25 @@ class ProducerService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        if (!$aProducer) {
+            throw new Exception("Le producteur n'existe pas", 404);
+        }
         return $aProducer;
     }
+    public function getProducerByUserId($id)
+    {
+        $sql = "SELECT producteur.id_producer FROM `utilisateur` JOIN producteur ON producteur.id_user=utilisateur.id_user WHERE utilisateur.id_user = :id AND role_user='producer' ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$aProducer) {
+            throw new Exception("Vous n'êtes pas producteur", 404);
+        }
+        
+        return $aProducer;
+    }
+    
 
     public function postProducer($desc_producerWanted, $payement_producerWanted, 
                 $name_producerWanted, $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted)

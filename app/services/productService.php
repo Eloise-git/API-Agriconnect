@@ -78,7 +78,15 @@ public function addProduct($id,$name, $description, $type, $price, $unit, $stock
     return $this->getProductById($id);
 }
 public function updateProductById($id, $name, $description, $type, $price, $unit, $stock){
-    $sql = "UPDATE produit SET name_product = :name, desc_product = :description, type_product = :type, price_product = :price, unit_product = :unit, stock_product = :stock WHERE id_product = :id";
+    $sql = "UPDATE PRODUIT
+    SET name_product = :name,
+        desc_product = :description,
+        type_product = :type,
+        price_product = :price,
+        unit_product = :unit,
+        stock_product = :unit
+    WHERE id_product = :id;";
+    
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
         'id' => $id,
