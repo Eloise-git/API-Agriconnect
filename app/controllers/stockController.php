@@ -46,10 +46,9 @@ class StockController extends Controller
       $stock_data = $data['name'] ?? null;
       $stock = $this->db->stock->updateStockById($id_product);
 
-      $response->getBody()->write(json_encode($stock));
-      return $response;
+      return sendJSON($response, $stock, 200);
     } catch (Exception $e) {
-      return $response->withStatus(500)->getBody()->write(json_encode($e->getMessage()));
+      return sendError($response, $e->getMessage());
     }
   }
 }

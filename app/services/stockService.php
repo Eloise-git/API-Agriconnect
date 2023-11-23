@@ -19,14 +19,19 @@ class StockService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_producer' => $id_producer]);
         $stocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return [
-            "id" => $stocks[1]['id_product'],
-            "name" => $stocks[1]['name_product'],
-            "catégorie" => $stocks[1]['type_product'],
-            "quantité" => $stocks[1]['stock_product'],
-            "disponible"=> $stocks[1]['stock_product']-$stocks[1]['Reservés'],
-            "réservés"=> $stocks[1]['Reservés']
-            ];;
+        $allstocks = [];
+        foreach ($stocks as $stock) {
+            $item = [
+                "id" => $stock['id_product'],
+                "name" => $stock['name_product'],
+                "catégorie" => $stock['type_product'],
+                "quantité" => $stock['stock_product'],
+                "disponible"=> $stock['stock_product']-$stock['Reservés'],
+                "réservés"=> $stock['Reservés']
+                ];
+            $allstocks[] = $item;
+        }
+        return $allstocks;
     }
 
     public function getAStockById($id_product, $id_producer)
