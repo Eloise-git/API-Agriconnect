@@ -37,7 +37,7 @@ class CommandeService extends Service
                 $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)
     {
         $sql = "INSERT INTO commande (id_order, status_order, date_order, payement_order, id_producer, id_user) 
-                VALUES (':id_order',':status', ':date',':payement',':id_producer',':id_user';";
+                VALUES (:id_order, :status, :date, :payement, :id_producer, :id_user)";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -52,7 +52,8 @@ class CommandeService extends Service
         if ($order) {
             throw new Exception("La commande existe déjà", 409);
         }
-        return $order;
+        
+        return $this->getAnOrderById($id_orderWanted);
     }
 
     public function updateOrderById($id_orderWanted, $status_orderWanted, 

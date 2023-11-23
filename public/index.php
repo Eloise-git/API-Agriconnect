@@ -71,11 +71,11 @@ $app->put('/product/{id}', controllers\ProductController::class . ':updateProduc
 $app->delete('/product/{id}', controllers\ProductController::class . ':deleteProduct');
 
 //Orders routes
-$app->get('/orders', controllers\CommandesController::class . 'getAllProducer');
-$app->get('/order/{id}', controllers\CommandesController::class . 'getACommande');
-$app->post('/order', controllers\CommandesController::class . 'postCommande');
-$app->put('/order/{id}', controllers\CommandesController::class . 'putCommande');
-$app->delete('/order/{id}', controllers\CommandesController::class . 'deleteCommande');
+$app->get('/orders', controllers\CommandesController::class . ':getAllCommandes');
+$app->get('/order/{id}', controllers\CommandesController::class . ':getACommande');
+$app->post('/order', controllers\CommandesController::class . ':postCommande');
+$app->put('/order/{id}', controllers\CommandesController::class . ':putCommande');
+$app->delete('/order/{id}', controllers\CommandesController::class . ':deleteCommande');
 
 // Messages routes
 $app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
