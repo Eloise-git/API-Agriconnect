@@ -15,11 +15,12 @@ class MessagerieService extends Service
 
     public function getAllMessages()
     {
-        $sql = "SELECT * FROM messagerie;";
+        $sql = "SELECT * FROM messagerie";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        $message = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $message;
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $messages;
     }
 
     public function getAMessageById($id)
@@ -59,10 +60,17 @@ class MessagerieService extends Service
     }
 
 
-    public function deleteUserById($id)
+    public function deleteMessageById($id)
     {
-        $sql = "DELETE FROM messagerie WHERE id_message = :id;";
+        $sql = "DELETE FROM messagerie WHERE id_message = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
+        $message = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$message) {
+        throw new Exception("Le message n'existe pas", 404);
+        }
+
+        return $message;
     }
 }
