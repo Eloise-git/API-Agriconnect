@@ -69,8 +69,8 @@ class MessagerieController extends Controller
   public function deleteMessage(Request $request, Response $response, array $args)
   {
     try {
-      $message = $this->db->message->deleteMessageById($args['id']);
-      return sendJSON($response, $message, 200);
+      $this->db->message->deleteMessageById($args['id']);
+      return sendJSON($response, "Le message a bien été supprimer", 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
     }

@@ -61,10 +61,6 @@ class MessagerieService extends Service
         $stmt->execute(['id' => $id]);
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$message) {
-        throw new Exception("Le message n'existe pas", 404);
-        }
-
         return $message;
     }
 }
