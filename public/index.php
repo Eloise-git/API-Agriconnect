@@ -68,6 +68,7 @@ $app->get('/products', controllers\ProductController::class . ':getAllProducts')
 $app->get('/product/{id}', controllers\ProductController::class . ':getProduct');
 $app->post('/product', controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
 $app->put('/product/{id}', controllers\ProductController::class . ':updateProduct');
+$app->delete('/product/{id}', controllers\ProductController::class . ':deleteProduct');
 
 //Orders routes
 $app->get('/orders', controllers\CommandesController::class . 'getAllProducer');

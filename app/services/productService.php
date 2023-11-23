@@ -29,6 +29,7 @@ public function getAll(){
             "price" => $product['price_product'],
             "unit" => $product['unit_product'],
             "stock" => $product['stock_product'],
+            "image" => $product['image_product'],
             "id_producter"=> $product['id_producer']
         ];
 
@@ -55,12 +56,13 @@ public function getProductById($id){
         "price" => $product['price_product'],
         "unit" => $product['unit_product'],
         "stock" => $product['stock_product'],
+        "image" => $product['image_product'],
         "id_producter"=> $product['id_producer']
     ];
 }
-public function addProduct($id,$name, $description, $type, $price, $unit, $stock, $id_producer){
-    $sql = "INSERT INTO PRODUIT (id_product,name_product, desc_product, type_product, price_product, unit_product, stock_product, id_producer) 
-    VALUES (:id,:name, :description, :type, :price, :unit, :stock, :id_producer)";
+public function addProduct($id,$name, $description, $type, $price, $unit, $stock,$image, $id_producer){
+    $sql = "INSERT INTO PRODUIT (id_product,name_product, desc_product, type_product, price_product, unit_product, stock_product, image_product, id_producer) 
+    VALUES (:id,:name, :description, :type, :price, :unit, :stock,:image, :id_producer)";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
         'id' => $id,
@@ -70,23 +72,23 @@ public function addProduct($id,$name, $description, $type, $price, $unit, $stock
         'price' => $price,
         'unit' => $unit,
         'stock' => $stock,
+        'image' => $image,
         'id_producer' => $id_producer
     ]);
 
-    
-
     return $this->getProductById($id);
 }
-public function updateProductById($id, $name, $description, $type, $price, $unit, $stock){
+public function updateProductById($id, $name, $description, $type, $price, $unit, $stock, $image){
     $sql = "UPDATE PRODUIT
     SET name_product = :name,
         desc_product = :description,
         type_product = :type,
         price_product = :price,
         unit_product = :unit,
-        stock_product = :unit
+        stock_product = :stock,
+        image_product = :image
     WHERE id_product = :id;";
-    
+
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
         'id' => $id,
@@ -95,10 +97,18 @@ public function updateProductById($id, $name, $description, $type, $price, $unit
         'type' => $type,
         'price' => $price,
         'unit' => $unit,
-        'stock' => $stock
+        'stock' => $stock,
+        'image' => $image
     ]);
 
     return $this->getProductById($id);
+}
+public function deleteProductById($id){
+    $sql = "DELETE FROM PRODUIT WHERE id_product = :id";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['id' => $id]);
+
+    return true;
 }
 
 }

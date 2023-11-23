@@ -59,13 +59,14 @@ class ProductController extends Controller
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
+      $image = $data['image'] ?? null;
       $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
 
-      if (!$name || !$description || !$type || !$price || !$unit || !$stock ) {
+      if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$image ) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
-      $product = $this->db->product->addProduct($id,$name, $description, $type, $price, $unit, $stock, $id_producer);
+      $product = $this->db->product->addProduct($id,$name, $description, $type, $price, $unit, $stock,$image, $id_producer);
 
       return sendJSON($response, $product, 200);
     } catch (Exception $e) {
@@ -87,14 +88,26 @@ class ProductController extends Controller
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
+      $image = $data['image'] ?? null;
       
       if (!$name || !$description || !$type || !$price || !$unit || !$stock) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
-      $product = $this->db->product->updateProductById($productId, $name, $description, $type, $price, $unit, $stock);
+      $product = $this->db->product->updateProductById($productId, $name, $description, $type, $price, $unit, $stock, $image);
 
       return sendJSON($response, $product, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+  public function deleteProduct(Request $request, Response $response,array $args)
+  {
+    try {
+      $productId = $args['id'];
+      $this->db->product->deleteProductById($productId);
+
+      return sendJSON($response, "Le produit a bien été supprimé", 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
     }
