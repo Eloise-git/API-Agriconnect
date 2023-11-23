@@ -33,19 +33,22 @@ class ProducerService extends Service
         return $aProducer;
     }
 
-    public function postProducer($desc_producerWanted, $payement_producerWanted, 
-                $name_producerWanted, $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted)
+    public function postProducer($producerId, $desc, $payement, $name, $adress,
+        $phoneNumber, $category, $producerId_user)
     {
-        $sql = "INSERT INTO producer (desc_producer, payement_producer, name_producer, adress_producer, phoneNumber_producer, category_producer) 
-                VALUES (':desc',':payement', ':name',':adress',':phone',':category';";
+        $sql = "INSERT INTO producer (id_producer, desc_producer, payement_producer, name_producer, 
+                adress_producer, phoneNumber_producer, category_producer, id_user) 
+                VALUES (':id',':desc',':payement', ':name',':adress',':phone',':category',':id_user';";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'desc' => $desc_producerWanted,
-            'payement' => $payement_producerWanted,
-            'name' => $name_producerWanted,
-            'adress' => $adress_producerWanted,
-            'phone' => $phoneNumber_producerWanted,
-            'category' => $category_producerWanted
+            'id' => $producerId,
+            'desc' => $desc,
+            'payement' => $payement,
+            'name' => $name,
+            'adress' => $adress,
+            'phone' => $phoneNumber,
+            'category' => $category,
+            'id_user' => $producerId_user
             ]);
         $producer = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($producer) {
@@ -55,12 +58,11 @@ class ProducerService extends Service
     }
 
     public function updateProducerById($id_producer, $desc_producerWanted, $payement_producerWanted, $name_producerWanted, 
-        $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted, $id_user)
+        $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted)
     {
-        $sql = "UPDATE producer SET (desc_producer=':desc', 
-            payement_producer=':payement', name_producer=':name', 
-            adress_producer=':adress', phoneNumber_producer=':phone', 
-            category_producer=':category';) WHERE id_producer = :id_producer AND id_user = :id_user";
+        $sql = "UPDATE producteur SET desc_producer= :desc, payement_producer= :payement, 
+                name_producer= :name, adress_producer= :adress, phoneNumber_producer= :phone, 
+                category_producer= :category WHERE id_producer = :id_producer;";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'desc' => $desc_producerWanted,
@@ -69,8 +71,7 @@ class ProducerService extends Service
             'adress' => $adress_producerWanted,
             'phone' => $phoneNumber_producerWanted,
             'category' => $category_producerWanted,
-            'id_producer' => $id_producer,
-            'id_user' => $id_user
+            'id_producer' => $id_producer
         ]);
 
         $producer = $this->getProducerById($id_producer);

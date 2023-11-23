@@ -1,12 +1,16 @@
 <?php
 namespace App\controllers;
 
+use Exception;
 use App\models\Database;
 use App\models\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\lib\sendJSON;
 use function App\lib\sendError;
+
+use function App\lib\hashPassword;
+
 
 require_once __DIR__ . '/../lib/utils.php';
 
@@ -42,37 +46,52 @@ class ProducerController extends Controller
   public function postProducer(Request $request, Response $response, array $args)
   {
     try {
-        $producer = $request->getAttribute('producer');
-        $producerId = $producer->id;
-        $producerId_user = $producer->id_user;
-        $rawdata = file_get_contents("php://input");
-        parse_str($rawdata,$data);
-        
-        $desc = $data['desc'] ?? null;
-        $payement = $data['payement'] ?? null;
-        $name = $data['name'] ?? null;
-        $adress = $data['adress'] ?? null;
-        $phoneNumber = $data['phoneNumber'] ?? null;
-        $category = $data['category'] ?? null;
-        
-        if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
-          throw new Exception("Tous les champs sont obligatoires", 400);
-        }
-        $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
-            $phoneNumber, $category, $producerId_user);
-  
-        return sendJSON($response, $producer, 200);
-      } catch (Exception $e) {
-        return sendError($response, $e->getMessage());
+      $data = $request->getParsedBody();        
+
+      $nom = $data['nom'] ?? null;
+      $prenom = $data['prenom'] ?? null;
+      $email = $data['email'] ?? null;
+      $password = $data['password'] ?? null;
+      $numero = $data['numero'] ?? null;
+      $role = $data['role'] ?? null;
+
+      $desc = $data['desc'] ?? null;
+      $payement = $data['payement'] ?? null;
+      $name = $data['name'] ?? null;
+      $adress = $data['adress'] ?? null;
+      $phoneNumber = $numero;
+      $category = $data['category'] ?? null;
+      $producerId = uniqid();
+      $producerId_user = uniqid();
+
+      $hashedPassword = hashPassword($password);
+
+      var_dump($nom, $prenom, $email, $hashedPassword, $numero, $role, $producerId, $desc, $payement, $name, $adress,
+      $phoneNumber, $category, $producerId_user);
+
+      if (!$nom || !$prenom || !$email || !$password || !$numero || !$role || !$desc 
+          || !$payement || !$name || !$adress || !$category) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
       }
+
+      
+      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $role);
+
+      $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
+            $phoneNumber, $category, $producerId_user);
+
+      return sendJSON($response, $producer, 200);
+      } catch (Exception $e) {
+        return sendError($response, $e->getMessage(), $e->getCode());
   }
+}
 
   public function putProducer(Request $request, Response $response, array $args)
   {
     try {
       $producer = $request->getAttribute('producer');
-      $producerId = $producer->id;
-      $producerId_user = $producer->id_user;
+      $producerId = $args['id'];
+
       $rawdata = file_get_contents("php://input");
       parse_str($rawdata,$data);
       
@@ -82,12 +101,15 @@ class ProducerController extends Controller
       $adress = $data['adress'] ?? null;
       $phoneNumber = $data['phoneNumber'] ?? null;
       $category = $data['category'] ?? null;
+
+      var_dump($producerId, $desc, $payement, $name, $adress,
+      $phoneNumber, $category);
       
       if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
       $producer = $this->db->producer->updateProducerById($producerId, $desc, $payement, $name, $adress,
-          $phoneNumber, $category, $producerId_user);
+          $phoneNumber, $category);
 
       return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
