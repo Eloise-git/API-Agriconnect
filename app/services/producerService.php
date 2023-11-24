@@ -50,15 +50,13 @@ class ProducerService extends Service
 
     public function getProducerByName($name)
     {
-        $sql = "SELECT producteur.name_producer FROM producteur WHERE name_producer = :name;";
+        $sql = "SELECT * FROM `producteur` WHERE name_producer = :name";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['name' => $name]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         if (!$aProducer) {
-            throw new Exception("Vous n'êtes pas producteur", 404);
+            throw new Exception("Le producteur n'existe pas", 404);
         }
-        
         return $aProducer;
     }
     

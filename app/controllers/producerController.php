@@ -46,10 +46,13 @@ class ProducerController extends Controller
   public function getProducerByName(Request $request, Response $response, array $args)
   {
     try {
-      $producerWanted = $this->db->producer->getProducerByName($args['name']);
+      $name = str_replace('-', ' ', $args['name']);
+      $name = ucfirst($name);
+      var_dump($name);
+      $producerWanted = $this->db->producer->getProducerByName($name);
+
       return sendJSON($response, $producerWanted, 200);
     } catch (Exception $e) {
-      var_dump($e->getCode());
       return sendError($response, $e->getMessage());
     }
   }
