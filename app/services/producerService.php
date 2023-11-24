@@ -54,10 +54,31 @@ class ProducerService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['name' => $name]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $id = $aProducer[0]['id_user'];
+        $sql = "SELECT createdAt_user FROM `utilisateur` WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $createdAt_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         if (!$aProducer) {
             throw new Exception("Le producteur n'existe pas", 404);
         }
-        return $aProducer;
+        $result = [];
+        foreach ($aProducer as $producer) {
+            $item = [
+                "id" => $producer['id_producer'],
+                "name" => $producer['name_producer'],
+                "description" => $producer['desc_producer'],
+                "payementMethod" => $producer['payement_producer'],
+                "adress" => $producer['adress_producer'],
+                "phoneNumber" => $producer['phoneNumber_producer'],
+                "category" => $producer['category_producer'],
+                "createdAt" => $createdAt_user[0]['createdAt_user']
+            ];
+            $result[] = $item;
+        }
+        return $result;
     }
     
 

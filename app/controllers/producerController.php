@@ -48,7 +48,6 @@ class ProducerController extends Controller
     try {
       $name = str_replace('-', ' ', $args['name']);
       $name = ucfirst($name);
-      var_dump($name);
       $producerWanted = $this->db->producer->getProducerByName($name);
 
       return sendJSON($response, $producerWanted, 200);
