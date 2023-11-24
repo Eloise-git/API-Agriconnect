@@ -46,7 +46,8 @@ class ProducerController extends Controller
   public function getProducerByName(Request $request, Response $response, array $args)
   {
     try {
-      $name = str_replace('-', ' ', $args['name']);
+      $name = $request->getQueryParams()['name'];
+      $name = str_replace('-', ' ', $name);
       $name = ucfirst($name);
       $producerWanted = $this->db->producer->getProducerByName($name);
 
