@@ -63,11 +63,9 @@ class ProducerController extends Controller
       $category = $data['category'] ?? null;
       $producerId = uniqid();
       $producerId_user = uniqid();
+      $created_At = date('Y-m-d');
 
       $hashedPassword = hashPassword($password);
-
-      var_dump($nom, $prenom, $email, $hashedPassword, $numero, $role, $producerId, $desc, $payement, $name, $adress,
-      $phoneNumber, $category, $producerId_user);
 
       if (!$nom || !$prenom || !$email || !$password || !$numero || !$role || !$desc 
           || !$payement || !$name || !$adress || !$category) {
@@ -75,7 +73,7 @@ class ProducerController extends Controller
       }
 
       
-      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $role);
+      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $created_At, $role);
 
       $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
             $phoneNumber, $category, $producerId_user);
