@@ -43,6 +43,17 @@ class ProducerController extends Controller
     }
   }
 
+  public function getProducerByName(Request $request, Response $response, array $args)
+  {
+    try {
+      $producerWanted = $this->db->producer->getProducerByName($args['name']);
+      return sendJSON($response, $producerWanted, 200);
+    } catch (Exception $e) {
+      var_dump($e->getCode());
+      return sendError($response, $e->getMessage());
+    }
+  }
+
   public function postProducer(Request $request, Response $response, array $args)
   {
     try {

@@ -47,6 +47,20 @@ class ProducerService extends Service
         
         return $aProducer;
     }
+
+    public function getProducerByName($name)
+    {
+        $sql = "SELECT producteur.name_producer FROM producteur WHERE name_producer = :name;";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['name' => $name]);
+        $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$aProducer) {
+            throw new Exception("Vous n'êtes pas producteur", 404);
+        }
+        
+        return $aProducer;
+    }
     
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,
