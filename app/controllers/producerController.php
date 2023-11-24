@@ -110,8 +110,6 @@ class ProducerController extends Controller
       $phoneNumber = $data['phoneNumber'] ?? null;
       $category = $data['category'] ?? null;
 
-      var_dump($producerId, $desc, $payement, $name, $adress,
-      $phoneNumber, $category);
       
       if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
         throw new Exception("Tous les champs sont obligatoires", 400);
