@@ -79,9 +79,9 @@ class ProducerController extends Controller
             $phoneNumber, $category, $producerId_user);
 
       return sendJSON($response, $producer, 200);
-      } catch (Exception $e) {
-        return sendError($response, $e->getMessage(), $e->getCode());
-  }
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
 }
 
   public function putProducer(Request $request, Response $response, array $args)
