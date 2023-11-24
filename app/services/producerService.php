@@ -52,9 +52,9 @@ class ProducerService extends Service
     public function postProducer($producerId, $desc, $payement, $name, $adress,
         $phoneNumber, $category, $producerId_user)
     {
-        $sql = "INSERT INTO producer (id_producer, desc_producer, payement_producer, name_producer, 
+        $sql = "INSERT INTO producteur (id_producer, desc_producer, payement_producer, name_producer, 
                 adress_producer, phoneNumber_producer, category_producer, id_user) 
-                VALUES (':id',':desc',':payement', ':name',':adress',':phone',':category',':id_user';";
+                VALUES (:id,:desc,:payement, :name,:adress,:phone,:category,:id_user);";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'id' => $producerId,
@@ -70,6 +70,7 @@ class ProducerService extends Service
         if ($producer) {
             throw new Exception("Le producteur existe déjà", 409);
         }
+        $producer = $this->getProducerById($producerId);
         return $producer;
     }
 

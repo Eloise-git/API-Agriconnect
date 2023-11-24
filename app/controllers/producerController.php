@@ -62,7 +62,6 @@ class ProducerController extends Controller
       $phoneNumber = $numero;
       $category = $data['category'] ?? null;
       $producerId = uniqid();
-      $producerId_user = uniqid();
       $created_At = date('Y-m-d');
 
       $hashedPassword = hashPassword($password);
@@ -74,9 +73,9 @@ class ProducerController extends Controller
 
       
       $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $created_At, $role);
-
+      $userId = $newuser['id'];
       $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
-            $phoneNumber, $category, $producerId_user);
+            $phoneNumber, $category, $userId);
 
       return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
