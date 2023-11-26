@@ -42,52 +42,52 @@ $app->add(function (Request $request, RequestHandlerInterface $handler): Respons
 $app->addRoutingMiddleware();
 
 // Test route
-$app->get('/', controllers\UserController::class . ':home');
+$app->get('/', Controllers\UserController::class . ':home');
 
 // Auth routes
-$app->post('/login', controllers\AuthController::class . ':login');
-$app->post('/register', controllers\AuthController::class . ':register');
+$app->post('/login', Controllers\AuthController::class . ':login');
+$app->post('/register', Controllers\AuthController::class . ':register');
 
 // Users routes
-$app->get('/user', controllers\UserController::class . ':getCurrentUser')->add(AuthMiddleware::class);
-$app->get('/user/{id}', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
-$app->get('/users', controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
-$app->post('/user', controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
-$app->put('/user/{id}', controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
-$app->delete('/user/{id}', controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
+$app->get('/user', Controllers\UserController::class . ':getCurrentUser')->add(AuthMiddleware::class);
+$app->get('/user/{id}', Controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
+$app->get('/users', Controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
+$app->post('/user', Controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
+$app->put('/user/{id}', Controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
+$app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
 //Producers routes
-$app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
-$app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
-$app->get('/producer', controllers\ProducerController::class . ':getProducerByName');
-$app->post('/producer', controllers\ProducerController::class . ':postProducer');
-$app->put('/producer/{id}', controllers\ProducerController::class . ':putProducer');
-$app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
+$app->get('/producers', Controllers\ProducerController::class . ':getAllProducer');
+$app->get('/producer/{id}', Controllers\ProducerController::class . ':getProducerById');
+$app->get('/producer', Controllers\ProducerController::class . ':getProducerByName');
+$app->post('/producer', Controllers\ProducerController::class . ':postProducer');
+$app->put('/producer/{id}', Controllers\ProducerController::class . ':putProducer');
+$app->delete('/producer/{id}', Controllers\ProducerController::class . ':deleteProducer');
 
 // Products routes
-$app->get('/products', controllers\ProductController::class . ':getAllProducts');
-$app->get('/product/{id}', controllers\ProductController::class . ':getProduct');
-$app->post('/product', controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
-$app->put('/product/{id}', controllers\ProductController::class . ':updateProduct');
-$app->delete('/product/{id}', controllers\ProductController::class . ':deleteProduct');
+$app->get('/products', Controllers\ProductController::class . ':getAllProducts');
+$app->get('/product/{id}', Controllers\ProductController::class . ':getProduct');
+$app->post('/product', Controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
+$app->put('/product/{id}', Controllers\ProductController::class . ':updateProduct');
+$app->delete('/product/{id}', Controllers\ProductController::class . ':deleteProduct');
 
 //Orders routes
-$app->get('/orders', controllers\CommandesController::class . ':getAllCommandes');
-$app->get('/order/{id}', controllers\CommandesController::class . ':getACommande');
-$app->post('/order', controllers\CommandesController::class . ':postCommande');
-$app->put('/order/{id}', controllers\CommandesController::class . ':putCommande');
-$app->delete('/order/{id}', controllers\CommandesController::class . ':deleteCommande');
+$app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes');
+$app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande');
+$app->post('/order', Controllers\CommandesController::class . ':postCommande');
+$app->put('/order/{id}', Controllers\CommandesController::class . ':putCommande');
+$app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCommande');
 
 // Messages routes
-$app->get('/messages', controllers\MessagerieController::class . ':getAllMessages');
-$app->get('/message/{id}', controllers\MessagerieController::class . ':getAMessage');
-$app->post('/message', controllers\MessagerieController::class . ':postMessage')->add(AuthMiddleware::class);
-$app->delete('/message/{id}', controllers\MessagerieController::class . ':deleteMessage');
+$app->get('/messages', Controllers\MessagerieController::class . ':getAllMessages');
+$app->get('/message/{id}', Controllers\MessagerieController::class . ':getAMessage');
+$app->post('/message', Controllers\MessagerieController::class . ':postMessage')->add(AuthMiddleware::class);
+$app->delete('/message/{id}', Controllers\MessagerieController::class . ':deleteMessage');
 
 //Stocks routes
-$app->get('/stocks', controllers\StockController::class . ':getAllStock')->add(AuthMiddleware::class);
-$app->get('/stock/{id}', controllers\StockController::class . ':getAStock')->add(AuthMiddleware::class);
-$app->put('/stock/{id}', controllers\StockController::class . ':putStock')->add(AuthMiddleware::class);
+$app->get('/stocks', Controllers\StockController::class . ':getAllStock')->add(AuthMiddleware::class);
+$app->get('/stock/{id}', Controllers\StockController::class . ':getAStock')->add(AuthMiddleware::class);
+$app->put('/stock/{id}', Controllers\StockController::class . ':putStock')->add(AuthMiddleware::class);
 
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
