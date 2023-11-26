@@ -1,14 +1,14 @@
 <?php
-namespace App\controllers;
+namespace App\Controllers;
 
-use App\models\Controller;
-use App\models\Database;
+use App\Models\Controller;
+use App\Models\Database;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use function App\lib\sendJSON;
-use function App\lib\sendError;
-use function App\lib\hashPassword;
+use function App\Lib\sendJSON;
+use function App\Lib\sendError;
+use function App\Lib\hashPassword;
 
 require_once __DIR__ . '/../lib/utils.php';
 

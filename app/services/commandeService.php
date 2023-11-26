@@ -1,8 +1,7 @@
 <?php
+namespace App\Services;
 
-namespace App\services;
-
-use App\models\Service;
+use App\Models\Service;
 use Exception;
 use PDO;
 

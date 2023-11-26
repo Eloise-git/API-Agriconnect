@@ -1,5 +1,5 @@
 <?php
-namespace App\lib;
+namespace App\Lib;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Firebase\JWT\JWT;

@@ -1,5 +1,5 @@
 <?php
-namespace App\middlewares;
+namespace App\Middlewares;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -9,8 +9,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-use function App\lib\sendError;
-use function App\lib\sendJSON;
+use function App\Lib\sendError;
 
 require_once __DIR__ . '/../lib/utils.php';
 
