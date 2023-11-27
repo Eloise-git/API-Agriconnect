@@ -141,6 +141,7 @@ class ProducerController extends Controller
       $distance = $data['distance'] ?? null;
       
       $this->db->producer->searchByNameLocationTypeDistance($name, $location, $type, $distance);
+      
       $this->db->producer->calculer_distance($location,$producer['adress_producer']);
       return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
