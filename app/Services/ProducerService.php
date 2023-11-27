@@ -14,7 +14,7 @@ class ProducerService extends Service
 
     public function getAllProducer()
     {
-        $sql = "SELECT * FROM `producteur`";
+        $sql = "SELECT * FROM PRODUCTEUR";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $producers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -24,7 +24,7 @@ class ProducerService extends Service
 
     public function getProducerById($id)
     {
-        $sql = "SELECT * FROM `producteur` WHERE id_producer = :id";
+        $sql = "SELECT * FROM PRODUCTEUR WHERE id_producer = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -49,7 +49,7 @@ class ProducerService extends Service
 
     public function getProducerByName($name)
     {
-        $sql = "SELECT * FROM `producteur` WHERE name_producer = :name";
+        $sql = "SELECT * FROM PRODUCTEUR WHERE name_producer = :name";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['name' => $name]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -80,7 +80,7 @@ class ProducerService extends Service
         return $result;
     }
     public function searchByNameLocationTypeDistance($nom,$location,$type,$distance){
-        $sql = "SELECT * FROM `producteur` WHERE name_producer LIKE :nom OR adress_producer LIKE :location OR category_producer LIKE :type";
+        $sql = "SELECT * FROM PRODUCTEUR WHERE name_producer LIKE :nom OR adress_producer LIKE :location OR category_producer LIKE :type";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['nom' => '%'.$nom.'%','location' => '%'.$location.'%','type' => '%'.$type.'%']);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -107,7 +107,7 @@ class ProducerService extends Service
     public function postProducer($producerId, $desc, $payement, $name, $adress,
         $phoneNumber, $category, $producerId_user)
     {
-        $sql = "INSERT INTO producteur (id_producer, desc_producer, payement_producer, name_producer, 
+        $sql = "INSERT INTO PRODUCTEUR (id_producer, desc_producer, payement_producer, name_producer, 
                 adress_producer, phoneNumber_producer, category_producer, id_user) 
                 VALUES (:id,:desc,:payement, :name,:adress,:phone,:category,:id_user);";
         $stmt = $this->db->prepare($sql);
@@ -132,7 +132,7 @@ class ProducerService extends Service
     public function updateProducerById($id_producer, $desc_producerWanted, $payement_producerWanted, $name_producerWanted, 
         $adress_producerWanted, $phoneNumber_producerWanted, $category_producerWanted)
     {
-        $sql = "UPDATE producteur SET desc_producer= :desc, payement_producer= :payement, 
+        $sql = "UPDATE PRODUCTEUR SET desc_producer= :desc, payement_producer= :payement, 
                 name_producer= :name, adress_producer= :adress, phoneNumber_producer= :phone, 
                 category_producer= :category WHERE id_producer = :id_producer;";
         $stmt = $this->db->prepare($sql);
@@ -151,19 +151,6 @@ class ProducerService extends Service
         throw new Exception("Erreur lors de la mise à jour du producteur : " . implode(", ", $stmt->errorInfo()));
         }
         return $producer;
-    }
-
-    public function searchByNameLocationTypeDistance($name, $location, $type, $distance)
-    {
-        $sql = "SELECT * FROM PRODUCTEUR
-            WHERE name_producer = :name OR adress_producer = :location OR category_producer = :type";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            'name' => $name,
-            'location' => $location,
-            'type' => $type
-        ]);
     }
 
     public function deleteProducerById($id)

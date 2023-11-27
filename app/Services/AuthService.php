@@ -14,7 +14,7 @@ class AuthService extends Service
 
   public function login($email, $password)
   {
-    $sql = "SELECT * FROM utilisateur WHERE email_user = :email";
+    $sql = "SELECT * FROM UTILISATEUR WHERE email_user = :email";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['email' => $email]);
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,7 +41,7 @@ class AuthService extends Service
 
   public function register($nom, $prenom, $email, $password, $numero,$createdAt, $role)
   {
-    $sql = "SELECT * FROM utilisateur WHERE email_user = :email";
+    $sql = "SELECT * FROM UTILISATEUR WHERE email_user = :email";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -50,7 +50,7 @@ class AuthService extends Service
       throw new Exception("L'utilisateur existe déjà", 409);
     }
 
-    $sql = "INSERT INTO utilisateur (id_user, firstName_user, lastName_user, email_user, password_user, phoneNumber_user,createdAt_user, role_user) VALUES (:id, :nom, :prenom, :email, :password, :numero,:createdAt, :role)";
+    $sql = "INSERT INTO UTILISATEUR (id_user, firstName_user, lastName_user, email_user, password_user, phoneNumber_user,createdAt_user, role_user) VALUES (:id, :nom, :prenom, :email, :password, :numero,:createdAt, :role)";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
       'id' => uniqid(),
@@ -64,7 +64,7 @@ class AuthService extends Service
       
     ]);
     
-    $sql = "SELECT * FROM utilisateur WHERE email_user = :email";
+    $sql = "SELECT * FROM UTILISATEUR WHERE email_user = :email";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
