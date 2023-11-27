@@ -26,7 +26,7 @@ function sendError(Response $response, $message, int $status = 500)
 
 function generateToken($userId, $userRole)
 {
-  $settings = require __DIR__ . '/../settings/settings.php';
+  $settings = require dirname(__DIR__) . '/Settings/Settings.php';
       $key = $settings['settings']['jwt']['secret'];
       $payload = array(
         "iat" => time(),

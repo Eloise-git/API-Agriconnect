@@ -10,7 +10,7 @@ use function App\Lib\sendJSON;
 use function App\Lib\sendError;
 use function App\Lib\hashPassword;
 
-require_once __DIR__ . '/../lib/utils.php';
+require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class ProducerController extends Controller
 {
@@ -49,6 +49,24 @@ class ProducerController extends Controller
       $name = ucfirst($name);
       $producerWanted = $this->db->producer->getProducerByName($name);
 
+      return sendJSON($response, $producerWanted, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+  public function searchByNameLocationTypeDistance(Request $request, Response $response,array $args){
+    try {
+      $name = $request->getQueryParams()['name'];
+      $name = str_replace('-', ' ', $name);
+      $name = ucfirst($name);
+
+      $location = $request->getQueryParams()['location'];
+
+      $type = $request->getQueryParams()['type'];
+      
+      $distance = $this->db->producer->getDistance($name,$location,$type);
+      $distance = $this->db->producer->getDistance($name,$location,$type);
+      $producerWanted = $this->db->producer->searchByNameLocationTypeDistance($name,$location,$type,$distance);
       return sendJSON($response, $producerWanted, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());

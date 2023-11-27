@@ -79,6 +79,29 @@ class ProducerService extends Service
         }
         return $result;
     }
+    public function searchByNameLocationTypeDistance($nom,$location,$type,$distance){
+        $sql = "SELECT * FROM `producteur` WHERE name_producer LIKE :nom OR adress_producer LIKE :location OR category_producer LIKE :type";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['nom' => '%'.$nom.'%','location' => '%'.$location.'%','type' => '%'.$type.'%']);
+        $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$aProducer) {
+            throw new Exception("Le producteur n'existe pas", 404);
+        }
+        $result = [];
+        foreach ($aProducer as $producer) {
+            $item = [
+                "id" => $producer['id_producer'],
+                "name" => $producer['name_producer'],
+                "description" => $producer['desc_producer'],
+                "payementMethod" => $producer['payement_producer'],
+                "adress" => $producer['adress_producer'],
+                "phoneNumber" => $producer['phoneNumber_producer'],
+                "category" => $producer['category_producer'],
+            ];
+            $result[] = $item;
+        }
+        return $result;
+    }
     
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,

@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\Lib\sendJSON;
 use function App\Lib\sendError;
 
-require_once __DIR__ . '/../lib/utils.php';
+require_once dirname(__DIR__) . '/Lib/Utils.php';
 class MessagerieController extends Controller
 {
   public function __construct()

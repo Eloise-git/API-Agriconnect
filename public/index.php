@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use App\Controllers;
 use App\Middlewares\AuthMiddleware;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
@@ -57,12 +57,13 @@ $app->put('/user/{id}', Controllers\UserController::class . ':putUser')->add(Aut
 $app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
 
 //Producers routes
-$app->get('/producers', Controllers\ProducerController::class . ':getAllProducer');
-$app->get('/producer/{id}', Controllers\ProducerController::class . ':getProducerById');
-$app->get('/producer', Controllers\ProducerController::class . ':getProducerByName');
-$app->post('/producer', Controllers\ProducerController::class . ':postProducer');
-$app->put('/producer/{id}', Controllers\ProducerController::class . ':putProducer');
-$app->delete('/producer/{id}', Controllers\ProducerController::class . ':deleteProducer');
+$app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
+$app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
+$app->get('/producer', controllers\ProducerController::class . ':getProducerByName');
+$app->get('/producer/seach', controllers\ProducerController::class . ':getProducerByName');
+$app->post('/producer', controllers\ProducerController::class . ':postProducer');
+$app->put('/producer/{id}', controllers\ProducerController::class . ':putProducer');
+$app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
 
 // Products routes
 $app->get('/products', Controllers\ProductController::class . ':getAllProducts');
@@ -91,7 +92,7 @@ $app->put('/stock/{id}', Controllers\StockController::class . ':putStock')->add(
 
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-    throw new HttpNotFoundException($request);
+  throw new HttpNotFoundException($request);
 });
 $app->run();
 
