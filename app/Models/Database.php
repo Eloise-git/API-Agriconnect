@@ -23,7 +23,7 @@ class Database
 
   public function __construct()
   {
-    $settings = dirname(__DIR__) . '/Settings/Settings.php';
+    $settings = require dirname(__DIR__) . '/Settings/Settings.php';
     $dbSettings = $settings['settings']['database'];
 
     $host = $dbSettings['host'];
