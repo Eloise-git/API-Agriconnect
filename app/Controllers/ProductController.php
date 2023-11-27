@@ -8,7 +8,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\Lib\sendJSON;
 use function App\Lib\sendError;
+use function App\Lib\verificationImage;
+use function App\Lib\uploadImage;
 
+require_once dirname(__DIR__) . '/Lib/ImageVerif.php';
 require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class ProductController extends Controller
@@ -22,7 +25,8 @@ class ProductController extends Controller
   public function getAllProducts(Request $request, Response $response, array $args)
   {
     try {
-      $products = $this->db->product->getAll();
+      $id_producer = $args['id'];
+      $products = $this->db->product->getAllbyidproducer($id_producer);
       return sendJSON($response, $products, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
@@ -43,35 +47,49 @@ class ProductController extends Controller
   }
 
 
-  public function addProduct(Request $request, Response $response,array $args)
+  public function addProduct(Request $request, Response $response, array $args)
   {
-    try {
-      
-      $user = $request->getAttribute('user');
-      $userId = $user->id;
-      $data = $request->getParsedBody();
-      
-      $id = uniqid();
-      $name = $data['name'] ?? null;
-      $description = $data['description'] ?? null;
-      $type = $data['type'] ?? null;
-      $price = $data['price'] ?? null;
-      $unit = $data['unit'] ?? null;
-      $stock = $data['stock'] ?? null;
-      $image = $data['image'] ?? null;
-      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      try {
+          $user = $request->getAttribute('user');
+          $userId = $user->id;
+          $data = $request->getParsedBody();
+          
 
-      if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$image ) {
-        throw new Exception("Tous les champs sont obligatoires", 400);
+          
+          $name = $data['name'] ?? null;
+          $description = $data['description'] ?? null;
+          $type = $data['type'] ?? null;
+          $price = $data['price'] ?? null;
+          $unit = $data['unit'] ?? null;
+          $stock = $data['stock'] ?? null;
+          $image = $request->getUploadedFiles()['image'] ?? null;
+          
+  
+          if (!$name || !$description || !$type || !$price || !$unit || !$stock || !$image) {
+              throw new Exception("Tous les champs sont obligatoires", 400);
+          }
+
+          $id = uniqid();
+          
+          $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+          if (!$id_producer) {
+              throw new Exception("Vous n'avez pas de producteur", 400);
+          }
+
+          $directory = dirname(dirname(__DIR__)) . '/ressource/image';
+          
+          verificationImage($image);
+
+          $imageName = uploadImage($image,$directory);
+  
+          $product = $this->db->product->addProduct($id, $name, $description, $type, $price, $unit, $stock, $imageName, $id_producer);
+  
+          return sendJSON($response, $product, 200);
+      } catch (Exception $e) {
+          return sendError($response, $e->getMessage());
       }
-
-      $product = $this->db->product->addProduct($id,$name, $description, $type, $price, $unit, $stock,$image, $id_producer);
-
-      return sendJSON($response, $product, 200);
-    } catch (Exception $e) {
-      return sendError($response, $e->getMessage());
-    }
   }
+  
 
 
   public function updateProduct(Request $request, Response $response,array $args)
