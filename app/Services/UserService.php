@@ -14,7 +14,7 @@ class UserService extends Service
 
   public function getUserById($id)
   {
-    $sql = "SELECT * FROM utilisateur WHERE id_user = :id";
+    $sql = "SELECT * FROM UTILISATEUR WHERE id_user = :id";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['id' => $id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -34,7 +34,7 @@ class UserService extends Service
     ];
   }
   public function getAll(){
-    $sql = "SELECT * FROM utilisateur";
+    $sql = "SELECT * FROM UTILISATEUR";
     $stmt = $this->db->prepare($sql);
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +59,7 @@ class UserService extends Service
 
   public function updateUserById($id,$nom, $prenom, $email, $password, $numero)
   {
-    $sql = "UPDATE utilisateur SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
+    $sql = "UPDATE UTILISATEUR SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
       "id" => $id,

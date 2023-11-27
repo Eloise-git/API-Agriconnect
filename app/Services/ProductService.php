@@ -13,7 +13,7 @@ class ProductService extends Service
   }
 
 public function getAll(){
-    $sql = "SELECT * FROM produit";
+    $sql = "SELECT * FROM PRODUIT";
     $stmt = $this->db->prepare($sql);
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +38,7 @@ public function getAll(){
     return $all;
 }
 public function getProductById($id){
-    $sql = "SELECT * FROM produit WHERE id_product = :id";
+    $sql = "SELECT * FROM PRODUIT WHERE id_product = :id";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['id' => $id]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
