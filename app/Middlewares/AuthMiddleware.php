@@ -18,7 +18,7 @@ class AuthMiddleware implements MiddlewareInterface
   public function process(Request $request, RequestHandler $handler): Response
   {
     try {
-      $settings = dirname(__DIR__) . '/Settings/Settings.php';
+      $settings = require dirname(__DIR__) . '/Settings/Settings.php';
       $key = $settings['settings']['jwt']['secret'];
 
       $auth = $request->getHeader('Authorization');
