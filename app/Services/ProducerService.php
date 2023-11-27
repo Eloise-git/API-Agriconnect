@@ -97,11 +97,60 @@ class ProducerService extends Service
                 "adress" => $producer['adress_producer'],
                 "phoneNumber" => $producer['phoneNumber_producer'],
                 "category" => $producer['category_producer'],
+
             ];
             $result[] = $item;
         }
         return $result;
     }
+
+    function calculer_distance($adresse1,$adresse2) {
+        $adresse1 = str_replace(" ", "+", $adresse1); //adresse de départ
+        $adresse2 = str_replace(" ", "+", $adresse2); //adresse d'arrivée
+        $url = 'http://maps.google.com/maps/api/directions/xml?language=fr&origin='.$adresse1.'&destination='.$adresse2.'&sensor=false'; //on créé l'url
+        
+        //on lance une requete aupres de google map avec l'url créée
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        $xml = curl_exec($ch);
+        
+        //on réccupère les infos
+        $charger_googlemap = simplexml_load_string($xml);
+        $distance = $charger_googlemap->route->leg->distance->value;
+        
+        //si l'info est récupérée, on calcule la distance
+        if ($charger_googlemap->status == "OK") {
+        $distance = $distance/1000;
+        $distance = number_format($distance, 2, ',', ' ');
+        
+        return $distance;
+        }
+        else {
+        //si l'info n'est pas récupérée, on lui attribu 0
+        return "0";
+        }
+        
+        //si le bouton calculer est lancé, on récupère les informations du formulaire et on lance la fonction
+        if (isset($_POST['calculer'])) {
+        $dep = $_POST['dep'];
+        $ari = $_POST['ari'];
+        $nbr = $_POST['nbr'];
+        $pkm = $_POST['pkm'];
+        $prix = $pkmcalculer_distance($dep,$ari);
+        $type = $_POST['type'];
+        
+        if ($type == 'a') {
+          $prix = $prix * $nbr;
+        }
+        elseif ($type == 'ar') {
+        $prix = $prix*$nbr;
+        $prix = $prix+$prix;
+        }
+        echo '<p>' . $dep . ' -> ' . $ari . '<b> ' . calculer_distance($dep,$ari) . ' KM</b></p>';
+        echo '<p><b>PRIX : ' . $prix . ' EUROS</b></p>';
+        }
+      }
     
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,

@@ -1,5 +1,11 @@
 <?php
 namespace App\Settings;
+use Symfony\Component\Dotenv\Dotenv;
+
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+
 
 return [
   'settings' => [
@@ -26,5 +32,6 @@ return [
     'jwt' => [
       'secret' => "sMNQd-vlbGoZHOzNONvffK-C3CJ0WstuyFTinbIrvW-wW-Nz9UfGF8DgCKTgfyHStoQkRCMr442MJrXUSBI8ZA",
     ],
+    "googleApiToken"  => $_ENV['GOOGLE_API_TOKEN'],
   ],
 ];
