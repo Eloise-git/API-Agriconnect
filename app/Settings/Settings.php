@@ -1,5 +1,5 @@
 <?php
-namespace App\settings;
+namespace App\Settings;
 
 return [
   'settings' => [

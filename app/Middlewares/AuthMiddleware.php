@@ -1,5 +1,5 @@
 <?php
-namespace App\middlewares;
+namespace App\Middlewares;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -9,17 +9,16 @@ use Psr\Http\Server\MiddlewareInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-use function App\lib\sendError;
-use function App\lib\sendJSON;
+use function App\Lib\sendError;
 
-require_once __DIR__ . '/../lib/utils.php';
+require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class AuthMiddleware implements MiddlewareInterface
 {
   public function process(Request $request, RequestHandler $handler): Response
   {
     try {
-      $settings = require __DIR__ . '/../settings/settings.php';
+      $settings = require dirname(__DIR__) . '/Settings/Settings.php';
       $key = $settings['settings']['jwt']['secret'];
 
       $auth = $request->getHeader('Authorization');

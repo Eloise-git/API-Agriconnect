@@ -1,8 +1,7 @@
 <?php
+namespace App\Services;
 
-namespace App\services;
-
-use App\models\Service;
+use App\Models\Service;
 use Exception;
 use PDO;
 
@@ -70,9 +69,9 @@ class ProducerService extends Service
                 "id" => $producer['id_producer'],
                 "name" => $producer['name_producer'],
                 "description" => $producer['desc_producer'],
-                "payementMethod" => $producer['payement_producer'],
-                "adress" => $producer['adress_producer'],
-                "phoneNumber" => $producer['phoneNumber_producer'],
+                "paymentMethod" => $producer['payement_producer'],
+                "address" => $producer['adress_producer'],
+                "phone" => $producer['phoneNumber_producer'],
                 "category" => $producer['category_producer'],
                 "createdAt" => $createdAt_user[0]['createdAt_user']
             ];

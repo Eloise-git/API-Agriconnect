@@ -1,14 +1,13 @@
 <?php
+namespace App\Models;
 
-namespace App\models;
-
-use App\services\AuthService;
-use App\services\UserService;
-use App\services\ProducerService;
-use App\services\ProductService;
-use App\services\CommandeService;
-use App\services\MessagerieService;
-use App\services\StockService;
+use App\Services\AuthService;
+use App\Services\UserService;
+use App\Services\ProducerService;
+use App\Services\ProductService;
+use App\Services\CommandeService;
+use App\Services\MessagerieService;
+use App\Services\StockService;
 use PDO;
 
 class Database
@@ -24,8 +23,7 @@ class Database
 
   public function __construct()
   {
-    $settings = require __DIR__ . '/../settings/settings.php';
-
+    $settings = dirname(__DIR__) . '/Settings/Settings.php';
     $dbSettings = $settings['settings']['database'];
 
     $host = $dbSettings['host'];
