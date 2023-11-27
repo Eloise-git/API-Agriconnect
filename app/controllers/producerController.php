@@ -56,6 +56,24 @@ class ProducerController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+  public function searchByNameLocationTypeDistance(Request $request, Response $response,array $args){
+    try {
+      $name = $request->getQueryParams()['name'];
+      $name = str_replace('-', ' ', $name);
+      $name = ucfirst($name);
+
+      $location = $request->getQueryParams()['location'];
+
+      $type = $request->getQueryParams()['type'];
+      
+      $distance = $this->db->producer->getDistance($name,$location,$type);
+      $distance = $this->db->producer->getDistance($name,$location,$type);
+      $producerWanted = $this->db->producer->searchByNameLocationTypeDistance($name,$location,$type,$distance);
+      return sendJSON($response, $producerWanted, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
 
   public function postProducer(Request $request, Response $response, array $args)
   {
