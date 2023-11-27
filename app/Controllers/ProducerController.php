@@ -118,8 +118,7 @@ class ProducerController extends Controller
       if (!$desc || !$payement || !$name || !$adress || !$phoneNumber || !$category) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
-      $producer = $this->db->producer->updateProducerById($producerId, $desc, $payement, $name, $adress,
-          $phoneNumber, $category);
+      $producer = $this->db->producer->updateProducerById($producerId, $desc, $payement, $name, $adress,$phoneNumber, $category);
 
       return sendJSON($response, $producer, 200);
     } catch (Exception $e) {
