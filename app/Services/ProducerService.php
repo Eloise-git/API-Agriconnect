@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Service;
+use function App\Lib\getDistance;
 use Exception;
 use PDO;
 
@@ -79,79 +80,47 @@ class ProducerService extends Service
         }
         return $result;
     }
-    public function searchByNameLocationTypeDistance($nom,$location,$type,$distance){
-        $sql = "SELECT * FROM PRODUCTEUR WHERE name_producer LIKE :nom OR adress_producer LIKE :location OR category_producer LIKE :type";
+    
+    public function searchByNameLocationTypeDistance($name, $location, $type, $distance)
+    {
+        
+        $distance = isset($distance) ? floatval($distance) : 0;
+
+        $sql = "SELECT * FROM PRODUCTEUR WHERE name_producer LIKE :nom OR category_producer LIKE :type;";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['nom' => '%'.$nom.'%','location' => '%'.$location.'%','type' => '%'.$type.'%']);
+        $stmt->execute([':nom' => '%'.$name.'%', ':type' => '%'.$type.'%']);
+
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (!$aProducer) {
-            throw new Exception("Le producteur n'existe pas", 404);
+
+        
+        if (empty($aProducer)) {
+            return [];
         }
         $result = [];
-        foreach ($aProducer as $producer) {
-            $item = [
-                "id" => $producer['id_producer'],
-                "name" => $producer['name_producer'],
-                "description" => $producer['desc_producer'],
-                "payementMethod" => $producer['payement_producer'],
-                "adress" => $producer['adress_producer'],
-                "phoneNumber" => $producer['phoneNumber_producer'],
-                "category" => $producer['category_producer'],
 
-            ];
-            $result[] = $item;
+        foreach ($aProducer as $producer) {
+            $distance_producer = getDistance($location, $producer['adress_producer']);
+
+            if ($distance >= $distance_producer) {
+                $item = [
+                    "id" => $producer['id_producer'],
+                    "name" => $producer['name_producer'],
+                    "description" => $producer['desc_producer'],
+                    "payementMethod" => $producer['payement_producer'],
+                    "adress" => $producer['adress_producer'],
+                    "phoneNumber" => $producer['phoneNumber_producer'],
+                    "type" => $producer['category_producer'],
+                ];
+
+                $result[] = $item;
+            }
         }
+
         return $result;
     }
 
-    function calculer_distance($adresse1,$adresse2) {
-        $adresse1 = str_replace(" ", "+", $adresse1); //adresse de départ
-        $adresse2 = str_replace(" ", "+", $adresse2); //adresse d'arrivée
-        $url = 'http://maps.google.com/maps/api/directions/xml?language=fr&origin='.$adresse1.'&destination='.$adresse2.'&sensor=false'; //on créé l'url
-        
-        //on lance une requete aupres de google map avec l'url créée
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-        $xml = curl_exec($ch);
-        
-        //on réccupère les infos
-        $charger_googlemap = simplexml_load_string($xml);
-        $distance = $charger_googlemap->route->leg->distance->value;
-        
-        //si l'info est récupérée, on calcule la distance
-        if ($charger_googlemap->status == "OK") {
-        $distance = $distance/1000;
-        $distance = number_format($distance, 2, ',', ' ');
-        
-        return $distance;
-        }
-        else {
-        //si l'info n'est pas récupérée, on lui attribu 0
-        return "0";
-        }
-        
-        //si le bouton calculer est lancé, on récupère les informations du formulaire et on lance la fonction
-        if (isset($_POST['calculer'])) {
-        $dep = $_POST['dep'];
-        $ari = $_POST['ari'];
-        $nbr = $_POST['nbr'];
-        $pkm = $_POST['pkm'];
-        $prix = $pkmcalculer_distance($dep,$ari);
-        $type = $_POST['type'];
-        
-        if ($type == 'a') {
-          $prix = $prix * $nbr;
-        }
-        elseif ($type == 'ar') {
-        $prix = $prix*$nbr;
-        $prix = $prix+$prix;
-        }
-        echo '<p>' . $dep . ' -> ' . $ari . '<b> ' . calculer_distance($dep,$ari) . ' KM</b></p>';
-        echo '<p><b>PRIX : ' . $prix . ' EUROS</b></p>';
-        }
-      }
-    
+
+
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,
         $phoneNumber, $category, $producerId_user)

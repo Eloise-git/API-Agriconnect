@@ -9,8 +9,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\Lib\sendJSON;
 use function App\Lib\sendError;
 use function App\Lib\hashPassword;
+use function App\Lib\getDistance;
 
 
+require_once dirname(__DIR__) . '/Lib/Distance.php';
 require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class ProducerController extends Controller
@@ -125,30 +127,27 @@ class ProducerController extends Controller
     }
   }
 
-  // /producer/search?name=&location=&type=&distance=
   public function searchByNameLocationTypeDistance(Request $request, Response $response, array $args)
   {
     try{
+      $name = $request->getQueryParams()['name'];
+      $location = $request->getQueryParams()['location'];
+      $type = $request->getQueryParams()['type'];
+      $distance = $request->getQueryParams()['distance'];
+      $name = str_replace('-', ' ', $name);
+      $location = str_replace('%', ' ', $location);
+      $name = ucfirst($name);
+      $location = ucfirst($location);
+      $type = ucfirst($type);
       
-      $producer = $request->getAttribute('producer');
+        $producers = $this->db->producer->searchByNameLocationTypeDistance($name, $location, $type, $distance);
 
-      $rawdata = file_get_contents("php://input");
-      parse_str($rawdata,$data);
-      
-      $name = $data['name'] ?? null;
-      $location = $data['location'] ?? null;
-      $type = $data['type'] ?? null;
-      $distance = $data['distance'] ?? null;
-      
-      $this->db->producer->searchByNameLocationTypeDistance($name, $location, $type, $distance);
-      
-      $this->db->producer->calculer_distance($location,$producer['adress_producer']);
-      return sendJSON($response, $producer, 200);
+        return sendJSON($response, $producers, 200);
     } catch (Exception $e) {
-      return sendError($response, $e->getMessage());
+        return sendError($response, $e->getMessage());
     }
-  }
-  
+}
+
   public function deleteProducer(Request $request, Response $response, array $args)
   {
     try {
