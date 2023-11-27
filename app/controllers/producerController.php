@@ -124,6 +124,27 @@ class ProducerController extends Controller
     }
   }
 
+  // /producer/search?name=&location=&type=&distance=
+  public function searchByNameLocationTypeDistance(Request $request, Response $response, array $args)
+  {
+    try{
+      $producer = $request->getAttribute('producer');
+
+      $rawdata = file_get_contents("php://input");
+      parse_str($rawdata,$data);
+      
+      $name = $data['name'] ?? null;
+      $location = $data['location'] ?? null;
+      $type = $data['type'] ?? null;
+      $distance = $data['distance'] ?? null;
+      $this->db->producer->searchByNameLocationTypeDistance($name, $location, $type, $distance);
+
+      return sendJSON($response, $producer, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+
   public function deleteProducer(Request $request, Response $response, array $args)
   {
     try {

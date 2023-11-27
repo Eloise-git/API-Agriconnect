@@ -130,6 +130,19 @@ class ProducerService extends Service
         return $producer;
     }
 
+    public function searchByNameLocationTypeDistance($name, $location, $type, $distance)
+    {
+        $sql = "SELECT * FROM PRODUCTEUR
+            WHERE name_producer = :name OR adress_producer = :location OR category_producer = :type";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'name' => $name,
+            'location' => $location,
+            'type' => $type
+        ]);
+    }
+
     public function deleteProducerById($id)
     {
         $sql = "DELETE FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id;
