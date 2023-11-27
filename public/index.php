@@ -60,7 +60,7 @@ $app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->a
 $app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
 $app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
 $app->get('/producer', controllers\ProducerController::class . ':getProducerByName');
-$app->get('/producer/seach', controllers\ProducerController::class . ':getProducerByName');
+// $app->get('/producer/seach', controllers\ProducerController::class . ':getProducerByName');
 $app->post('/producer', controllers\ProducerController::class . ':postProducer');
 $app->put('/producer/{id}', controllers\ProducerController::class . ':putProducer');
 $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
