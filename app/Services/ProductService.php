@@ -12,10 +12,10 @@ class ProductService extends Service
     $this->db = $db;
   }
 
-public function getAll(){
-    $sql = "SELECT * FROM PRODUIT";
+public function getAllbyidproducer($id_producer){
+    $sql = "SELECT * FROM PRODUIT WHERE id_producer = :id";
     $stmt = $this->db->prepare($sql);
-    $stmt->execute();
+    $stmt->execute(['id' => $id_producer]);
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $all = [];
 

@@ -66,7 +66,7 @@ $app->put('/producer/{id}', controllers\ProducerController::class . ':putProduce
 $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
 
 // Products routes
-$app->get('/products', Controllers\ProductController::class . ':getAllProducts');
+$app->get('/products/{id}', Controllers\ProductController::class . ':getAllProducts');
 $app->get('/product/{id}', Controllers\ProductController::class . ':getProduct');
 $app->post('/product', Controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
 $app->put('/product/{id}', Controllers\ProductController::class . ':updateProduct');

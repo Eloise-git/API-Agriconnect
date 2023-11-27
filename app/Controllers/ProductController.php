@@ -22,7 +22,8 @@ class ProductController extends Controller
   public function getAllProducts(Request $request, Response $response, array $args)
   {
     try {
-      $products = $this->db->product->getAll();
+      $id_producer = $args['id'];
+      $products = $this->db->product->getAllbyidproducer($id_producer);
       return sendJSON($response, $products, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
