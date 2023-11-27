@@ -10,7 +10,6 @@ function getDistance($adresse1, $adresse2)
     
     $data = json_decode(file_get_contents($url), true);
 
-    var_dump($url);
     $distance = $data['rows'][0]['elements'][0]['distance']['value'];
 
     if (isset($data['rows'][0]['elements'][0]['distance']['text'])) {
