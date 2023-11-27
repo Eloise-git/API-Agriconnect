@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use App\Controllers;
 use App\Middlewares\AuthMiddleware;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
@@ -91,7 +91,7 @@ $app->put('/stock/{id}', Controllers\StockController::class . ':putStock')->add(
 
 // Last route
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-    throw new HttpNotFoundException($request);
+  throw new HttpNotFoundException($request);
 });
 $app->run();
 

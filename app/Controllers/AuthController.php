@@ -11,7 +11,7 @@ use function App\Lib\sendError;
 use function App\Lib\generateToken;
 use function App\Lib\hashPassword;
 
-require_once __DIR__ . '/../lib/utils.php';
+require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class AuthController extends Controller
 {
