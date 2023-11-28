@@ -58,7 +58,6 @@ $app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->a
 
 //Producers routes
 $app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
-
 $app->get('/producer/search', controllers\ProducerController::class . ':searchByNameLocationTypeDistance');
 $app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
 $app->get('/producer', controllers\ProducerController::class . ':getProducerByName');
@@ -78,6 +77,7 @@ $app->delete('/product/{id}', Controllers\ProductController::class . ':deletePro
 
 //Orders routes
 $app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes');
+$app->get('/orders/{id}', Controllers\CommandesController::class . ':getAllCommandesbyProducerId');
 $app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande');
 $app->post('/order', Controllers\CommandesController::class . ':postCommande');
 $app->put('/order/{id}', Controllers\CommandesController::class . ':putCommande');

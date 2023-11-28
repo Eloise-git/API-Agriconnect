@@ -29,6 +29,18 @@ class CommandesController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+  
+  public function getAllCommandesbyProducerId(Request $request, Response $response, array $args)
+  {
+    try {
+      $order = $this->db->order->getAllOrdersbyProducerId($args['id']);
+      
+      return sendJSON($response, $order, 200);
+    } catch (Exception $e) {
+      var_dump($e->getCode());
+      return sendError($response, $e->getMessage());
+    }
+  }
 
   public function getACommande(Request $request, Response $response, array $args)
   {

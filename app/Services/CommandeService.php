@@ -21,6 +21,26 @@ class CommandeService extends Service
 
         return $orders;
     }
+    public function getAllOrdersbyProducerId($id_producer)
+    {
+        $sql = "SELECT * FROM COMMANDE JOIN CONTENIR ON CONTENIR.id_order=COMMANDE.id_order JOIN PRODUIT ON PRODUIT.id_product=CONTENIR.id_product JOIN UTILISATEUR ON COMMANDE.id_user=UTILISATEUR.id_user WHERE COMMANDE.id_producer = :id_producer";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id_producer' => $id_producer]);
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($orders as $order) {
+            $item = [
+                "numero" => $order['id_order'],
+                "status" => $order['status_order'],
+                "date" => $order['date_order'],
+                "montant" => $order["price_product"].' '.$order["unit_product"],
+                "client" => $order["firstName_user"].' '.$order["lastName_user"],
+            ];
+    
+            $all[] = $item;
+        }
+    
+        return $all;
+    }
 
     public function getAnOrderById($id)
     {
