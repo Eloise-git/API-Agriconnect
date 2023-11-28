@@ -12,16 +12,7 @@ class CommandeService extends Service
         $this->db = $db;
     }
 
-    public function getAllOrders()
-    {
-        $sql = "SELECT * FROM COMMANDE";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $orders;
-    }
-    public function getAllOrdersbyProducerId($id_producer)
+    public function getAllOrders($id_producer)
     {
         $sql = "SELECT * FROM COMMANDE JOIN CONTENIR ON CONTENIR.id_order=COMMANDE.id_order JOIN PRODUIT ON PRODUIT.id_product=CONTENIR.id_product JOIN UTILISATEUR ON COMMANDE.id_user=UTILISATEUR.id_user WHERE COMMANDE.id_producer = :id_producer";
         $stmt = $this->db->prepare($sql);
