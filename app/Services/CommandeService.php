@@ -30,7 +30,7 @@ class CommandeService extends Service
         foreach ($orders as $order) {
             $item = [
                 "numero" => $order['id_order'],
-                "status" => $order['status_order'],
+                "statut" => $order['status_order'],
                 "date" => $order['date_order'],
                 "montant" => $order["price_product"].' '.$order["unit_product"],
                 "client" => $order["firstName_user"].' '.$order["lastName_user"],
