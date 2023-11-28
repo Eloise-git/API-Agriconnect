@@ -69,7 +69,7 @@ $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteP
 $app->get('/producer/user/{id}', controllers\ProducerController::class . ':getProducerByUserId');
 
 // Products routes
-$app->get('/products/{id}', Controllers\ProductController::class . ':getAllProducts');
+$app->get('/producer/{id}/products', Controllers\ProductController::class . ':getAllProducts');
 $app->get('/product/{id}', Controllers\ProductController::class . ':getProduct');
 $app->post('/product', Controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
 $app->put('/product/{id}', Controllers\ProductController::class . ':updateProduct');
