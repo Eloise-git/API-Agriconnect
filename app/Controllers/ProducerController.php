@@ -96,15 +96,7 @@ class ProducerController extends Controller
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
     }
-  }
-  public function getProducerByUserId(Request $request, Response $response,array $args){
-    try{
-      $producer = $this->db->producer->getProducerByUserId($args['id']);
-      return sendJSON($response, $producer, 200);
-    } catch (Exception $e) {
-      return sendError($response, $e->getMessage());
-    }
-  }
+}
 
   public function putProducer(Request $request, Response $response, array $args)
   {
