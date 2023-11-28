@@ -53,11 +53,11 @@ class AuthController extends Controller
     try {
       $data = $request->getParsedBody();
 
-      $nom = $data['nom'] ?? null;
-      $prenom = $data['prenom'] ?? null;
+      $nom = $data['name'] ?? null;
+      $prenom = $data['surname'] ?? null;
       $email = $data['email'] ?? null;
       $password = $data['password'] ?? null;
-      $numero = $data['numero'] ?? null;
+      $numero = $data['phone'] ?? null;
       $role = $data['role'] ?? null;
 
       if (!$nom || !$prenom || !$email || !$password || !$numero || !$role) {
