@@ -51,7 +51,7 @@ class CommandeService extends Service
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'id_order' => $id_orderWanted,
+            'id' => $id_orderWanted,
             'status' => $status_orderWanted,
             'date' => $date_orderWanted,
             'payement' => $payement_orderWanted,
