@@ -74,7 +74,7 @@ class ProducerService extends Service
                 "description" => $producer['desc_producer'],
                 "paymentMethod" => $producer['payement_producer'],
                 "address" => $producer['adress_producer'],
-                "phone" => $producer['phoneNumber_producer'],
+                "phoneNumber" => $producer['phoneNumber_producer'],
                 "category" => $producer['category_producer'],
                 "createdAt" => $createdAt_user[0]['createdAt_user']
             ];
@@ -84,8 +84,10 @@ class ProducerService extends Service
     }
 
     public function searchByNameLocationTypeDistance($name, $location, $type, $distance) {
-
-        $sql = "SELECT * FROM PRODUCTEUR WHERE (name_producer LIKE :name OR category_producer LIKE :type) AND name_producer LIKE :producerName AND category_producer LIKE :producerType;";
+        $sql = "SELECT * FROM PRODUCTEUR 
+                WHERE (name_producer LIKE :name OR category_producer LIKE :type) 
+                    AND name_producer LIKE :producerName AND category_producer LIKE :producerType;";
+        
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':name' => "%$name%", ':type' => "%$type%", ':producerName' => "%$name%", ':producerType' => "%$type%"]);
     
@@ -97,20 +99,25 @@ class ProducerService extends Service
     
         $result = [];
     
-        foreach ($producers as $producer) {
-            if ($location != null) {
+            
+    
+            if ($location !== "" && is_string($location)) {
                 $location = explode(',', $location);
                 $latitudeLocation = trim($location[0]);
                 $longitudeLocation = trim($location[1]);
+                foreach ($producers as $producer) {
+                    $latitudeProducer = $producer['latitude_producer'];
+                    $longitudeProducer = $producer['longitude_producer'];
     
-                $coordinatesArray = explode(',', $producer['adress_producer']);
-                $latitudeProducer = trim($coordinatesArray[0]);
-                $longitudeProducer = trim($coordinatesArray[1]);
+                $distanceProducer = getDistanceBetweenPoints(
+                    $latitudeLocation, 
+                    $longitudeLocation, 
+                    $latitudeProducer, 
+                    $longitudeProducer
+                );
     
-                $distanceProducer = getDistanceBetweenPoints($latitudeLocation, $longitudeLocation, $latitudeProducer, $longitudeProducer);
-    
-                if ($distance == null || $distance >= $distanceProducer) {
-                    $paymentMethod = isset($producer['paymentMethod']) ? $producer['paymentMethod'] : null;
+                if ($distance !== null && $distance >= $distanceProducer) {
+                    $paymentMethod = $producer['paymentMethod'] ?? null;
     
                     $item = [
                         "id" => $producer['id_producer'],
@@ -125,8 +132,9 @@ class ProducerService extends Service
     
                     $result[] = $item;
                 }
-            } else {
-                $paymentMethod = isset($producer['paymentMethod']) ? $producer['paymentMethod'] : null;
+            }} else {
+                foreach ($producers as $producer) {
+                $paymentMethod = $producer['paymentMethod'] ?? null;
     
                 $item = [
                     "id" => $producer['id_producer'],
@@ -139,13 +147,13 @@ class ProducerService extends Service
                 ];
     
                 $result[] = $item;
-            }
-        }
+            }}
+        
     
         return $result;
     }
     
-
+    
     
     
 

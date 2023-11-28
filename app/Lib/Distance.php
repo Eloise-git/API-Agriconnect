@@ -29,7 +29,8 @@ function getDistance($adresse1, $adresse2)
 
 function getDistanceBetweenPoints($latitude1, $longitude1, $latitude2, $longitude2) {
     $earthRadius = 6371;
-
+    $latitude1 = (float)$latitude1;
+    $longitude1 = (float)$longitude1;
     $deltaLatitude = deg2rad($latitude2 - $latitude1);
     $deltaLongitude = deg2rad($longitude2 - $longitude1);
 
@@ -43,4 +44,5 @@ function getDistanceBetweenPoints($latitude1, $longitude1, $latitude2, $longitud
 
     return round($distance, 2);
 }
+
 ?>
