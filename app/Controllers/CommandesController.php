@@ -21,7 +21,11 @@ class CommandesController extends Controller
   public function getAllCommandes(Request $request, Response $response, array $args)
   {
     try {
-      $order = $this->db->order->getAllOrders();
+      $user = $request->getAttribute('user');
+      $userId=$user->id;
+
+      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $order = $this->db->order->getAllOrders($id_producer);
       
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {

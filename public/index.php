@@ -58,7 +58,6 @@ $app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->a
 
 //Producers routes
 $app->get('/producers', controllers\ProducerController::class . ':getAllProducer');
-
 $app->get('/producer/search', controllers\ProducerController::class . ':searchByNameLocationTypeDistance');
 $app->get('/producer/{id}', controllers\ProducerController::class . ':getProducerById');
 $app->get('/producer', controllers\ProducerController::class . ':getProducerByName');
@@ -70,22 +69,22 @@ $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteP
 $app->get('/producer/user/{id}', controllers\ProducerController::class . ':getProducerByUserId');
 
 // Products routes
-$app->get('/products/{id}', Controllers\ProductController::class . ':getAllProducts');
+$app->get('/producer/{id}/products', Controllers\ProductController::class . ':getAllProducts');
 $app->get('/product/{id}', Controllers\ProductController::class . ':getProduct');
 $app->post('/product', Controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);
 $app->put('/product/{id}', Controllers\ProductController::class . ':updateProduct');
 $app->delete('/product/{id}', Controllers\ProductController::class . ':deleteProduct');
 
 //Orders routes
-$app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes');
-$app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande');
-$app->post('/order', Controllers\CommandesController::class . ':postCommande');
-$app->put('/order/{id}', Controllers\CommandesController::class . ':putCommande');
-$app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCommande');
+$app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes')->add(AuthMiddleware::class);
+$app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande')->add(AuthMiddleware::class);
+$app->post('/order', Controllers\CommandesController::class . ':postCommande')->add(AuthMiddleware::class);
+$app->put('/order/{id}', Controllers\CommandesController::class . ':putCommande') ->add(AuthMiddleware::class);
+$app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCommande')->add(AuthMiddleware::class);
 
 // Messages routes
-$app->get('/messages', Controllers\MessagerieController::class . ':getAllMessages');
-$app->get('/message/{id}', Controllers\MessagerieController::class . ':getAMessage');
+$app->get('/messages', Controllers\MessagerieController::class . ':getAllMessages')->add(AuthMiddleware::class);
+$app->get('/message/{id}', Controllers\MessagerieController::class . ':getAMessage')->add(AuthMiddleware::class);
 $app->post('/message', Controllers\MessagerieController::class . ':postMessage')->add(AuthMiddleware::class);
 $app->delete('/message/{id}', Controllers\MessagerieController::class . ':deleteMessage');
 

@@ -38,7 +38,12 @@ class ProducerController extends Controller
     public function getProducerById(Request $request, Response $response, array $args)
   {
     try {
-      $producerWanted = $this->db->producer->getProducerById($args['id']);
+      
+      $user = $request->getAttribute('user');
+      $userId=$user->id;
+
+      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $producerWanted = $this->db->producer->getProducerById($id_producer);
       return sendJSON($response, $producerWanted, 200);
     } catch (Exception $e) {
       var_dump($e->getCode());
