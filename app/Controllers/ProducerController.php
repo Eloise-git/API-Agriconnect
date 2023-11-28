@@ -10,6 +10,8 @@ use function App\Lib\sendJSON;
 use function App\Lib\sendError;
 use function App\Lib\hashPassword;
 use function App\Lib\getDistance;
+use function App\Lib\getDistanceBetweenPoints;
+use function App\Lib\getCoordinatesFromAddress;
 
 
 require_once dirname(__DIR__) . '/Lib/Distance.php';
@@ -126,19 +128,15 @@ class ProducerController extends Controller
     }
   }
 
-  public function searchByNameLocationTypeDistance(Request $request, Response $response, array $args)
-  {
-    try{
-      $name = $request->getQueryParams()['name'];
-      $location = $request->getQueryParams()['location'];
-      $type = $request->getQueryParams()['type'];
-      $distance = $request->getQueryParams()['distance'];
-      $name = str_replace('-', ' ', $name);
-      $location = str_replace('%', ' ', $location);
-      $name = ucfirst($name);
-      $location = ucfirst($location);
-      $type = ucfirst($type);
-      
+  public function searchByNameLocationTypeDistance(Request $request, Response $response, array $args) {
+    try {
+        $nameParam = $request->getQueryParams()['name'];
+        $type = $request->getQueryParams()['type'];
+        $distance = $request->getQueryParams()['distance'];
+        $location = $request->getQueryParams()['location'];
+
+        $name = ucfirst(str_replace('-', ' ', $nameParam));
+
         $producers = $this->db->producer->searchByNameLocationTypeDistance($name, $location, $type, $distance);
 
         return sendJSON($response, $producers, 200);
@@ -146,6 +144,7 @@ class ProducerController extends Controller
         return sendError($response, $e->getMessage());
     }
 }
+
 
   public function deleteProducer(Request $request, Response $response, array $args)
   {

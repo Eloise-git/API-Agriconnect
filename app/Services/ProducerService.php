@@ -3,6 +3,8 @@ namespace App\Services;
 
 use App\Models\Service;
 use function App\Lib\getDistance;
+use function App\Lib\getDistanceBetweenPoints;
+use function App\Lib\getCoordinatesFromAddress;
 use Exception;
 use PDO;
 
@@ -80,47 +82,72 @@ class ProducerService extends Service
         }
         return $result;
     }
-    
-    public function searchByNameLocationTypeDistance($name, $location, $type, $distance)
-    {
-        
-        $distance = isset($distance) ? floatval($distance) : 0;
 
-        $sql = "SELECT * FROM PRODUCTEUR WHERE name_producer LIKE :nom OR category_producer LIKE :type;";
+    public function searchByNameLocationTypeDistance($name, $location, $type, $distance) {
+
+        $sql = "SELECT * FROM PRODUCTEUR WHERE (name_producer LIKE :name OR category_producer LIKE :type) AND name_producer LIKE :producerName AND category_producer LIKE :producerType;";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':nom' => '%'.$name.'%', ':type' => '%'.$type.'%']);
-
-        $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        
-        if (empty($aProducer)) {
+        $stmt->execute([':name' => "%$name%", ':type' => "%$type%", ':producerName' => "%$name%", ':producerType' => "%$type%"]);
+    
+        $producers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        if (empty($producers)) {
             return [];
         }
+    
         $result = [];
-
-        foreach ($aProducer as $producer) {
-            $distance_producer = getDistance($location, $producer['adress_producer']);
-
-            if ($distance >= $distance_producer) {
+    
+        foreach ($producers as $producer) {
+            if ($location != null) {
+                $location = explode(',', $location);
+                $latitudeLocation = trim($location[0]);
+                $longitudeLocation = trim($location[1]);
+    
+                $coordinatesArray = explode(',', $producer['adress_producer']);
+                $latitudeProducer = trim($coordinatesArray[0]);
+                $longitudeProducer = trim($coordinatesArray[1]);
+    
+                $distanceProducer = getDistanceBetweenPoints($latitudeLocation, $longitudeLocation, $latitudeProducer, $longitudeProducer);
+    
+                if ($distance == null || $distance >= $distanceProducer) {
+                    $paymentMethod = isset($producer['paymentMethod']) ? $producer['paymentMethod'] : null;
+    
+                    $item = [
+                        "id" => $producer['id_producer'],
+                        "name" => $producer['name_producer'],
+                        "description" => $producer['desc_producer'],
+                        "paymentMethod" => $paymentMethod,
+                        "address" => $producer['adress_producer'],
+                        "phoneNumber" => $producer['phoneNumber_producer'],
+                        "type" => $producer['category_producer'],
+                        "distance" => $distanceProducer . " km"
+                    ];
+    
+                    $result[] = $item;
+                }
+            } else {
+                $paymentMethod = isset($producer['paymentMethod']) ? $producer['paymentMethod'] : null;
+    
                 $item = [
                     "id" => $producer['id_producer'],
                     "name" => $producer['name_producer'],
                     "description" => $producer['desc_producer'],
-                    "payementMethod" => $producer['payement_producer'],
-                    "adress" => $producer['adress_producer'],
+                    "paymentMethod" => $paymentMethod,
+                    "address" => $producer['adress_producer'],
                     "phoneNumber" => $producer['phoneNumber_producer'],
-                    "type" => $producer['category_producer'],
+                    "type" => $producer['category_producer']
                 ];
-
+    
                 $result[] = $item;
             }
         }
-
+    
         return $result;
     }
+    
 
-
-
+    
+    
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,
         $phoneNumber, $category, $producerId_user)
