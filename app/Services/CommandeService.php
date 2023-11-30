@@ -70,10 +70,7 @@ class CommandeService extends Service
             $listProducts = explode(', ', $listProducts);
         }
 
-        var_dump($listProducts);
-
         for ($i = 0; $i < count($listProducts); $i++) {
-            var_dump($listProducts[$i]);
             $sqlRequete = "INSERT INTO CONTENIR (id_product, id_order) VALUES (:id_product, :id_order);";
             $stmtRequete = $this->db->prepare($sqlRequete);
             $resultRequete = $stmtRequete->execute([
@@ -90,6 +87,7 @@ class CommandeService extends Service
 
         return $this->getAnOrderById($id_orderWanted);
     } catch (PDOException $e) {
+
         $this->db->rollBack();
 
         if ($e->errorInfo[1] == 1452) {
