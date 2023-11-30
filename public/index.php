@@ -69,6 +69,8 @@ $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteP
 $app->get('/producer/user/{id}', controllers\ProducerController::class . ':getProducerByUserId');
 
 // Products routes
+$app->get('/ressource/image/{name}', controllers\ImageController::class . ':getImage');
+
 $app->get('/producer/{id}/products', Controllers\ProductController::class . ':getAllProducts');
 $app->get('/product/{id}', Controllers\ProductController::class . ':getProduct');
 $app->post('/product', Controllers\ProductController::class . ':addProduct')->add(AuthMiddleware::class);

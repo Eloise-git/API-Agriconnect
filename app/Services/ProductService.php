@@ -44,6 +44,8 @@ public function getAllbyidproducer($id_producer){
     return $all;
 }
 
+
+
 public function getProductById($id){
     $sql = "SELECT * FROM PRODUIT WHERE id_product = :id";
     $stmt = $this->db->prepare($sql);
