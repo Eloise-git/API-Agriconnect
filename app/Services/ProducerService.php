@@ -125,8 +125,10 @@ class ProducerService extends Service
                         "description" => $producer['desc_producer'],
                         "paymentMethod" => $paymentMethod,
                         "address" => $producer['adress_producer'],
-                        "phoneNumber" => $producer['phoneNumber_producer'],
-                        "type" => $producer['category_producer'],
+                        "latitude" => $latitudeProducer,
+                        "longitude" => $longitudeProducer,
+                        "phone" => $producer['phoneNumber_producer'],
+                        "category" => $producer['category_producer'],
                         "distance" => $distanceProducer . " km"
                     ];
     
@@ -142,8 +144,10 @@ class ProducerService extends Service
                     "description" => $producer['desc_producer'],
                     "paymentMethod" => $paymentMethod,
                     "address" => $producer['adress_producer'],
-                    "phoneNumber" => $producer['phoneNumber_producer'],
-                    "type" => $producer['category_producer']
+                    "latitude" => $producer['latitude_producer'],
+                    "longitude" => $producer['longitude_producer'],
+                    "phone" => $producer['phoneNumber_producer'],
+                    "category" => $producer['category_producer']
                 ];
     
                 $result[] = $item;
