@@ -81,7 +81,7 @@ $app->delete('/product/{id}', Controllers\ProductController::class . ':deletePro
 $app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes')->add(AuthMiddleware::class);
 $app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande')->add(AuthMiddleware::class);
 $app->post('/order', Controllers\CommandesController::class . ':postCommande')->add(AuthMiddleware::class);
-$app->put('/order/{id}', Controllers\CommandesController::class . ':putCommande') ->add(AuthMiddleware::class);
+$app->patch('/order/{id}', Controllers\CommandesController::class . ':pathCommande') ->add(AuthMiddleware::class);
 $app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCommande')->add(AuthMiddleware::class);
 
 // Messages routes

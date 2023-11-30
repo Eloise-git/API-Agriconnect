@@ -73,21 +73,16 @@ class CommandesController extends Controller
     }
   }
 
-  public function putCommande(Request $request, Response $response, array $args)
+  public function pathCommande(Request $request, Response $response, array $args)
   {
     try {
+      $data = $request->getParsedBody(); 
 
-      $id_order = $args['id'];
-      $rawdata = file_get_contents("php://input");
-      parse_str($rawdata,$data);
-      
       $status = $data['status'] ?? null;
-      $date = $data['date'] ?? null;
-      $payement = $data['payement'] ?? null;
-      $id_producer = $data['id_producer'] ?? null;
-      $id_user = $data['id_user'] ?? null;
+      $id_order = $args['id'];
 
-      $order = $this->db->order->updateOrderById($id_order, $status, $date, $payement, $id_producer, $id_user);
+
+      $order = $this->db->order->updateOrderById($id_order, $status);
 
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {

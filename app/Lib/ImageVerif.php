@@ -1,14 +1,19 @@
 <?php
 namespace App\Lib;
-use Exception;
+use function App\Lib\sendError;
+
+require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 function verificationImage($imageverif){
     $imageType = $imageverif->getClientMediaType();
     $fileExtension = explode('/',$imageType)[1];
     $Extensionautoriser = ['jpg','jpeg','png'];
+    if(!in_array($fileExtension,[''])){
+        throw new Exception("Il n'y a pas d'image", 400);
+    }
 
     if(!in_array($fileExtension,$Extensionautoriser)){
-        throw new Exception("Le format de l'image n'est pas valide", 400);
+        throw new Exception("Extension non autoriser", 400);
     }
 }
 

@@ -101,30 +101,17 @@ class CommandeService extends Service
 
 
 
-    public function updateOrderById($id_orderWanted, $status_orderWanted, 
-    $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)
+    public function updateOrderById($id_orderWanted, $status_orderWanted)
     {
-        $sql = "UPDATE COMMANDE SET status_order=:status, date_order=:date, payement_order=:payement,
-        id_producer=:id_producer, id_user=:id_user WHERE id_order =:id_order;";
+        $sql = "UPDATE COMMANDE SET status_order=:status WHERE id_order =:id_order;";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'status' => $status_orderWanted,
-            'date' => $date_orderWanted,
-            'payement' => $payement_orderWanted,
-            'id_producer' => $id_producer_orderWanted,
-            'id_user' => $id_user_orderWanted,
             'id_order' => $id_orderWanted
         ]);
         
-        return [
-            'status' => $status_orderWanted,
-            'date' => $date_orderWanted,
-            'payement' => $payement_orderWanted,
-            'id_producer' => $id_producer_orderWanted,
-            'id_user' => $id_user_orderWanted,
-            'id_order' => $id_orderWanted
-        ];
+        return $this->getAnOrderById($id_orderWanted);
     }
 
     public function deleteOrderById($id)
