@@ -19,6 +19,12 @@ public function getAllbyidproducer($id_producer){
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $all = [];
 
+    $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+    $dbSettings = $settings['settings']['app'];
+
+    $url = $dbSettings['url'];
+
+    $chemin = "/ressource/image/";
     foreach ($products as $product) {
         $item = [
             "id" => $product['id_product'],
@@ -28,7 +34,7 @@ public function getAllbyidproducer($id_producer){
             "price" => $product['price_product'],
             "unit" => $product['unit_product'],
             "stock" => $product['stock_product'],
-            "image" => $product['image_product'],
+            "image" => $url.$chemin.$product['image_product'],
             "id_producter"=> $product['id_producer']
         ];
 
@@ -37,6 +43,7 @@ public function getAllbyidproducer($id_producer){
 
     return $all;
 }
+
 public function getProductById($id){
     $sql = "SELECT * FROM PRODUIT WHERE id_product = :id";
     $stmt = $this->db->prepare($sql);
