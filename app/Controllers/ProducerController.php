@@ -12,8 +12,10 @@ use function App\Lib\hashPassword;
 use function App\Lib\getDistance;
 use function App\Lib\getDistanceBetweenPoints;
 use function App\Lib\getCoordinatesFromAddress;
+use function App\Lib\verificationImage;
+use function App\Lib\uploadImage;
 
-
+require_once dirname(__DIR__) . '/Lib/ImageVerif.php';
 require_once dirname(__DIR__) . '/Lib/Distance.php';
 require_once dirname(__DIR__) . '/Lib/Utils.php';
 
@@ -83,21 +85,29 @@ class ProducerController extends Controller
       $adress = $data['adress'] ?? null;
       $phoneNumber = $numero;
       $category = $data['category'] ?? null;
+      $image = $request->getUploadedFiles()['image'] ?? null;
       $producerId = uniqid();
       $created_At = date('Y-m-d');
 
       $hashedPassword = hashPassword($password);
 
       if (!$nom || !$prenom || !$email || !$password || !$numero || !$role || !$desc 
-          || !$payement || !$name || !$adress || !$category) {
+          || !$payement || !$name || !$adress || !$category || !$image) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
       
       $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $created_At, $role);
       $userId = $newuser['id'];
+      
+      $directory = dirname(dirname(__DIR__)) . '/ressource/image';
+          
+      verificationImage($image);
+
+      $imageName = uploadImage($image,$directory);
+
       $producer = $this->db->producer->postProducer($producerId, $desc, $payement, $name, $adress,
-            $phoneNumber, $category, $userId);
+            $phoneNumber, $category,$imageName, $userId);
 
       return sendJSON($response, $producer, 200);
     } catch (Exception $e) {

@@ -13,7 +13,9 @@ class ProducerService extends Service
     public function __construct($db)
     {
         $this->db = $db;
+        
     }
+    
 
     public function getAllProducer()
     {
@@ -22,7 +24,27 @@ class ProducerService extends Service
         $stmt->execute();
         $producers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $producers;
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
+
+        $url = $dbSettings['url'];
+
+        $chemin = "/ressource/image/";
+        $result = [];
+        foreach ($producers as $producer) {
+            $item = [
+                "id" => $producer['id_producer'],
+                "name" => $producer['name_producer'],
+                "description" => $producer['desc_producer'],
+                "paymentMethod" => $producer['payement_producer'],
+                "address" => $producer['adress_producer'],
+                "phoneNumber" => $producer['phoneNumber_producer'],
+                "image" => $url.$chemin.$producer['image_producer'],
+                "category" => $producer['category_producer']
+            ];
+            $result[] = $item;
+        }
+        return $result;
     }
 
     public function getProducerById($id)
@@ -34,7 +56,28 @@ class ProducerService extends Service
         if (!$aProducer) {
             throw new Exception("Le producteur n'existe pas", 404);
         }
-        return $aProducer;
+
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
+
+        $url = $dbSettings['url'];
+
+        $chemin = "/ressource/image/";
+        $result = [];
+        foreach ($aProducer as $producer) {
+            $item = [
+                "id" => $producer['id_producer'],
+                "name" => $producer['name_producer'],
+                "description" => $producer['desc_producer'],
+                "paymentMethod" => $producer['payement_producer'],
+                "address" => $producer['adress_producer'],
+                "phoneNumber" => $producer['phoneNumber_producer'],
+                "image" => $url.$chemin.$producer['image_producer'],
+                "category" => $producer['category_producer']
+            ];
+            $result[] = $item;
+        }
+        return $result;
     }
     public function getProducerByUserId($id)
     {
@@ -66,6 +109,13 @@ class ProducerService extends Service
         if (!$aProducer) {
             throw new Exception("Le producteur n'existe pas", 404);
         }
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
+
+        $url = $dbSettings['url'];
+
+        $chemin = "/ressource/image/";
+
         $result = [];
         foreach ($aProducer as $producer) {
             $item = [
@@ -76,6 +126,7 @@ class ProducerService extends Service
                 "address" => $producer['adress_producer'],
                 "phoneNumber" => $producer['phoneNumber_producer'],
                 "category" => $producer['category_producer'],
+                'image' => $url.$chemin.$producer['image_producer'],
                 "createdAt" => $createdAt_user[0]['createdAt_user']
             ];
             $result[] = $item;
@@ -162,11 +213,11 @@ class ProducerService extends Service
     
 
     public function postProducer($producerId, $desc, $payement, $name, $adress,
-        $phoneNumber, $category, $producerId_user)
+        $phoneNumber, $category,$image, $producerId_user)
     {
         $sql = "INSERT INTO PRODUCTEUR (id_producer, desc_producer, payement_producer, name_producer, 
-                adress_producer, phoneNumber_producer, category_producer, id_user) 
-                VALUES (:id,:desc,:payement, :name,:adress,:phone,:category,:id_user);";
+                adress_producer, phoneNumber_producer, category_producer,image_producer, id_user) 
+                VALUES (:id,:desc,:payement, :name,:adress,:phone,:category,:image,:id_user);";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'id' => $producerId,
@@ -176,6 +227,7 @@ class ProducerService extends Service
             'adress' => $adress,
             'phone' => $phoneNumber,
             'category' => $category,
+            'image' => $image,
             'id_user' => $producerId_user
             ]);
         $producer = $stmt->fetchAll(PDO::FETCH_ASSOC);
