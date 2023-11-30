@@ -137,8 +137,8 @@ class ProducerService extends Service
     public function searchByNameLocationTypeDistance($name, $location, $type, $distance) {
         $sql = "SELECT * FROM PRODUCTEUR 
                 WHERE (name_producer LIKE :name OR category_producer LIKE :type) 
-                    AND name_producer LIKE :producerName AND category_producer LIKE :producerType;";
-        
+                AND name_producer LIKE :producerName AND category_producer LIKE :producerType;";
+    
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':name' => "%$name%", ':type' => "%$type%", ':producerName' => "%$name%", ':producerType' => "%$type%"]);
     
@@ -154,7 +154,6 @@ class ProducerService extends Service
         $dbSettings = $settings['settings']['app'];
     
         $url = $dbSettings['url'];
-    
         $chemin = "/ressource/image/";
     
         if ($location !== "" && is_string($location)) {
@@ -172,6 +171,23 @@ class ProducerService extends Service
                     $latitudeProducer,
                     $longitudeProducer
                 )) {
+                    $paymentMethod = $producer['paymentMethod'] ?? null;
+    
+                    $item = [
+                        "id" => $producer['id_producer'],
+                        "name" => $producer['name_producer'],
+                        "description" => $producer['desc_producer'],
+                        "paymentMethod" => $paymentMethod,
+                        "address" => $producer['adress_producer'],
+                        "latitude" => $latitudeProducer,
+                        "longitude" => $longitudeProducer,
+                        "phone" => $producer['phoneNumber_producer'],
+                        "category" => $producer['category_producer'],
+                        "image" => $url . $chemin . $producer['image_producer']
+                    ];
+    
+                    $result[] = $item;
+                }if ($distance ==null){
                     $paymentMethod = $producer['paymentMethod'] ?? null;
     
                     $item = [
@@ -213,7 +229,7 @@ class ProducerService extends Service
     
         return $result;
     }
-    
+        
     
     
     public function postProducer($producerId, $desc, $payement, $name, $adress,
