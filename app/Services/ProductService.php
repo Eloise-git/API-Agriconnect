@@ -55,7 +55,12 @@ public function getProductById($id){
     if (!$product) {
         throw new Exception("Le produit n'existe pas", 404);
     }
+    $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+    $dbSettings = $settings['settings']['app'];
 
+    $url = $dbSettings['url'];
+
+    $chemin = "/ressource/image/";
     return [
         "id" => $product['id_product'],
         "name" => $product['name_product'],
@@ -64,7 +69,7 @@ public function getProductById($id){
         "price" => $product['price_product'],
         "unit" => $product['unit_product'],
         "stock" => $product['stock_product'],
-        "image" => $product['image_product'],
+        "image" => $url.$chemin.$product['image_product'],
         "id_producter"=> $product['id_producer']
     ];
 }
