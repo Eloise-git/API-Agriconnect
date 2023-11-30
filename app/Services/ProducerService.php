@@ -150,24 +150,28 @@ class ProducerService extends Service
     
         $result = [];
     
-            
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
     
-            if ($location !== "" && is_string($location)) {
-                $location = explode(',', $location);
-                $latitudeLocation = trim($location[0]);
-                $longitudeLocation = trim($location[1]);
-                foreach ($producers as $producer) {
-                    $latitudeProducer = $producer['latitude_producer'];
-                    $longitudeProducer = $producer['longitude_producer'];
+        $url = $dbSettings['url'];
     
-                $distanceProducer = getDistanceBetweenPoints(
-                    $latitudeLocation, 
-                    $longitudeLocation, 
-                    $latitudeProducer, 
+        $chemin = "/ressource/image/";
+    
+        if ($location !== "" && is_string($location)) {
+            $location = explode(',', $location);
+            $latitudeLocation = trim($location[0]);
+            $longitudeLocation = trim($location[1]);
+    
+            foreach ($producers as $producer) {
+                $latitudeProducer = $producer['latitude_producer'];
+                $longitudeProducer = $producer['longitude_producer'];
+    
+                if ($distance === null || $distance >= getDistanceBetweenPoints(
+                    $latitudeLocation,
+                    $longitudeLocation,
+                    $latitudeProducer,
                     $longitudeProducer
-                );
-    
-                if ($distance !== null && $distance >= $distanceProducer) {
+                )) {
                     $paymentMethod = $producer['paymentMethod'] ?? null;
     
                     $item = [
@@ -180,13 +184,14 @@ class ProducerService extends Service
                         "longitude" => $longitudeProducer,
                         "phone" => $producer['phoneNumber_producer'],
                         "category" => $producer['category_producer'],
-                        "distance" => $distanceProducer . " km"
+                        "image" => $url . $chemin . $producer['image_producer']
                     ];
     
                     $result[] = $item;
                 }
-            }} else {
-                foreach ($producers as $producer) {
+            }
+        } else {
+            foreach ($producers as $producer) {
                 $paymentMethod = $producer['paymentMethod'] ?? null;
     
                 $item = [
@@ -198,20 +203,19 @@ class ProducerService extends Service
                     "latitude" => $producer['latitude_producer'],
                     "longitude" => $producer['longitude_producer'],
                     "phone" => $producer['phoneNumber_producer'],
-                    "category" => $producer['category_producer']
+                    "category" => $producer['category_producer'],
+                    "image" => $url . $chemin . $producer['image_producer']
                 ];
     
                 $result[] = $item;
-            }}
-        
+            }
+        }
     
         return $result;
     }
     
     
     
-    
-
     public function postProducer($producerId, $desc, $payement, $name, $adress,
         $phoneNumber, $category,$image, $producerId_user)
     {
