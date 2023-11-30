@@ -43,28 +43,65 @@ class CommandeService extends Service
         return $order;
     }
 
-    public function postOrder($id_orderWanted, $status_orderWanted, 
-                $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)
-    {
-        $sql = "INSERT INTO COMMANDE (id_order, status_order, date_order, payement_order, id_producer, id_user) 
-                VALUES (:id_order, :status, :date, :payement, :id_producer, :id_user)";
+    public function postOrder($id_orderWanted, $status_orderWanted, $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted, $listProducts)
+{
+    try {
+        $this->db->beginTransaction();
 
+        $sql = "INSERT INTO COMMANDE (id_order, status_order, date_order, payement_order, id_producer, id_user) 
+                VALUES (:id_order, :status, :date, :payement, :id_producer, :id_user);";
+        
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            'id' => $id_orderWanted,
+
+        $result = $stmt->execute([
+            'id_order' => $id_orderWanted,
             'status' => $status_orderWanted,
             'date' => $date_orderWanted,
             'payement' => $payement_orderWanted,
             'id_producer' => $id_producer_orderWanted,
             'id_user' => $id_user_orderWanted
-            ]);
-        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($order) {
-            throw new Exception("La commande existe déjà", 409);
+        ]);
+
+        if (!$result) {
+            throw new Exception("Error inserting order", 500);
         }
-        
+
+        if (!is_array($listProducts)) {
+            $listProducts = explode(', ', $listProducts);
+        }
+
+        var_dump($listProducts);
+
+        for ($i = 0; $i < count($listProducts); $i++) {
+            var_dump($listProducts[$i]);
+            $sqlRequete = "INSERT INTO CONTENIR (id_product, id_order) VALUES (:id_product, :id_order);";
+            $stmtRequete = $this->db->prepare($sqlRequete);
+            $resultRequete = $stmtRequete->execute([
+                'id_product' => $listProducts[$i],
+                'id_order' => $id_orderWanted
+            ]);
+
+            if (!$resultRequete) {
+                throw new Exception("Error inserting product into order", 500);
+            }
+        }
+
+        $this->db->commit();
+
         return $this->getAnOrderById($id_orderWanted);
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+
+        if ($e->errorInfo[1] == 1452) {
+            throw new Exception("Foreign key constraint violation: " . $e->getMessage(), 500);
+        } else {
+            throw $e;
+        }
     }
+}
+    
+
+
 
     public function updateOrderById($id_orderWanted, $status_orderWanted, 
     $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted)

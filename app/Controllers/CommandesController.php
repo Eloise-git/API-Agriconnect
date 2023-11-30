@@ -58,12 +58,13 @@ class CommandesController extends Controller
       $id_producer = $data['id_producer'] ?? null;
       $id_user = $data['id_user'] ?? null;
       $id_order = uniqid();
+      $listProducts = $data['listProducts'];
 
-      if (!$status || !$date || !$payement || !$id_producer || !$id_user) {
+      if (!$status || !$date || !$payement || !$id_producer || !$id_user || !$listProducts) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
-      $order = $this->db->order->postOrder($id_order, $status, $date, $payement, $id_producer, $id_user);
+      $order = $this->db->order->postOrder($id_order, $status, $date, $payement, $id_producer, $id_user, $listProducts);
 
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {
