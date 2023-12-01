@@ -78,7 +78,7 @@ class CommandesController extends Controller
     try {
       $data = $request->getParsedBody(); 
 
-      $status = $data['status'] ?? null;
+      $status = $data['statut'] ?? null;
       $id_order = $args['id'];
 
 

@@ -103,11 +103,11 @@ class CommandeService extends Service
 
     public function updateOrderById($id_orderWanted, $status_orderWanted)
     {
-        $sql = "UPDATE COMMANDE SET status_order=:status WHERE id_order =:id_order;";
+        $sql = "UPDATE COMMANDE SET status_order=:statut WHERE id_order =:id_order;";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'status' => $status_orderWanted,
+            'statut' => $status_orderWanted,
             'id_order' => $id_orderWanted
         ]);
         
