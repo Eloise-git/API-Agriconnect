@@ -35,12 +35,46 @@ class CommandeService extends Service
 
     public function getAnOrderById($id)
     {
-        $sql = "SELECT * FROM COMMANDE WHERE id_order = :id";
+        $sql = "SELECT * FROM COMMANDE JOIN CONTENIR ON CONTENIR.id_order = COMMANDE.id_order JOIN PRODUIT ON PRODUIT.id_product = CONTENIR.id_product JOIN UTILISATEUR ON COMMANDE.id_user = UTILISATEUR.id_user WHERE COMMANDE.id_order = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $order;
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
+
+        $url = $dbSettings['url'];
+
+        $chemin = "/ressource/image/";
+
+        foreach ($order as $order) {
+            $item = [
+                "numero" => $order['id_order'],
+                "statut" => $order['status_order'],
+                "date" => $order['date_order'],
+                "payement" => $order['payement_order'],
+                "id_product" => $order['id_product'],
+                "name_product" => $order['name_product'],
+                "desc_product" => $order['desc_product'],
+                "type_product" => $order['type_product'],
+                "price_product" => $order['price_product'],
+                "unit_product" => $order['unit_product'],
+                "stock_product" => $order['stock_product'],
+                "image_product" => $url . $chemin . $order['image_product'],
+                "id_producer" => $order['id_producer'],
+                "id_user" => $order['id_user'],
+                "firstName_user" => $order['firstName_user'],
+                "lastName_user" => $order['lastName_user'],
+                "email_user" => $order['email_user'],
+                "phoneNumber_user" => $order['phoneNumber_user'],
+                "password_user" => $order['password_user'],
+                "createdAt_user" => $order['createdAt_user'],
+                "role_user" => $order['role_user'],
+            ];
+    
+            $all[] = $item;
+        }
+        return $all;
     }
 
     public function postOrder($id_orderWanted, $status_orderWanted, $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted, $listProducts)
