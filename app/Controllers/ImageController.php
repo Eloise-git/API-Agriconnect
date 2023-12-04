@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use function App\Lib\sendJSON;
 use function App\Lib\sendError;
 
+require_once dirname(__DIR__) . '/Lib/Utils.php';
+
 class ImageController extends Controller
 {
   public function __construct()
