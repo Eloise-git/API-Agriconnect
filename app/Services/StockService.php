@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -18,6 +19,7 @@ class StockService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_producer' => $id_producer]);
         $stocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         $allstocks = [];
         foreach ($stocks as $stock) {
             $item = [
@@ -25,11 +27,11 @@ class StockService extends Service
                 "name" => $stock['name_product'],
                 "category" => $stock['type_product'],
                 "quantity" => $stock['stock_product'],
-                "available"=> $stock['stock_product']-$stock['Reservés'],
-                "reserved"=> $stock['Reservés'],
+                "available" => $stock['stock_product'] - $stock['Reservés'],
+                "reserved" => $stock['Reservés'],
                 "price" => $stock['price_product'],
                 "unit" => $stock['unit_product']
-                ];
+            ];
             $allstocks[] = $item;
         }
         return $allstocks;
@@ -37,8 +39,7 @@ class StockService extends Service
 
     public function getAStockById($id_product, $id_producer)
     {
-        $sql = "SELECT * FROM PRODUIT WHERE id_product = :id_product
-                AND id_producer = :id_producer";
+        $sql = "SELECT * FROM PRODUIT WHERE id_product = :id_product AND id_producer = :id_producer";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'id_product' => $id_product,
@@ -58,7 +59,6 @@ class StockService extends Service
             'stock_product' => $stock_product
         ]);
 
-        $stock = $this->getAStockById($id_product, $id_producer);
-        return $stock;
+        return $this->getAStockById($id_product, $id_producer);
     }
 }

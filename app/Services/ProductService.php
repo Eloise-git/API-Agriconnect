@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -7,26 +8,54 @@ use PDO;
 
 class ProductService extends Service
 {
-  public function __construct($db)
-  {
-    $this->db = $db;
-  }
+    private $api_url;
+    private $path_image;
+    public function __construct($db)
+    {
+        $this->db = $db;
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $this->api_url = $settings['settings']['app']['url'];
+        $this->path_image = '/ressource/image/';
+    }
 
-public function getAllbyidproducer($id_producer){
-    $sql = "SELECT * FROM PRODUIT WHERE id_producer = :id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(['id' => $id_producer]);
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $all = [];
+    public function getAllbyidproducer($id_producer)
+    {
+        $sql = "SELECT * FROM PRODUIT WHERE id_producer = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id_producer]);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $settings = require dirname(__DIR__) . '/Settings/Settings.php';
-    $dbSettings = $settings['settings']['app'];
+        $result = [];
+        foreach ($products as $product) {
+            $item = [
+                "id" => $product['id_product'],
+                "name" => $product['name_product'],
+                "description" => $product['desc_product'],
+                "type" => $product['type_product'],
+                "price" => $product['price_product'],
+                "unit" => $product['unit_product'],
+                "stock" => $product['stock_product'],
+                "image" => $this->api_url . $this->path_image . $product['image_product'],
+                "id_producter" => $product['id_producer']
+            ];
+            $result[] = $item;
+        }
 
-    $url = $dbSettings['url'];
+        return $result;
+    }
 
-    $chemin = "/ressource/image/";
-    foreach ($products as $product) {
-        $item = [
+    public function getProductById($id)
+    {
+        $sql = "SELECT * FROM PRODUIT WHERE id_product = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$product) {
+            throw new Exception("Le produit n'existe pas", 404);
+        }
+
+        return [
             "id" => $product['id_product'],
             "name" => $product['name_product'],
             "description" => $product['desc_product'],
@@ -34,94 +63,52 @@ public function getAllbyidproducer($id_producer){
             "price" => $product['price_product'],
             "unit" => $product['unit_product'],
             "stock" => $product['stock_product'],
-            "image" => $url.$chemin.$product['image_product'],
-            "id_producter"=> $product['id_producer']
+            "image" => $this->api_url . $this->path_image . $product['image_product'],
+            "id_producter" => $product['id_producer']
         ];
-
-        $all[] = $item;
     }
 
-    return $all;
-}
+    public function addProduct($id, $name, $description, $type, $price, $unit, $stock, $image, $id_producer)
+    {
+        $sql = "INSERT INTO PRODUIT (id_product,name_product, desc_product, type_product, price_product, unit_product, stock_product, image_product, id_producer) VALUES (:id,:name, :description, :type, :price, :unit, :stock,:image, :id_producer)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+            'name' => $name,
+            'description' => $description,
+            'type' => $type,
+            'price' => $price,
+            'unit' => $unit,
+            'stock' => $stock,
+            'image' => $image,
+            'id_producer' => $id_producer
+        ]);
 
-
-
-public function getProductById($id){
-    $sql = "SELECT * FROM PRODUIT WHERE id_product = :id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(['id' => $id]);
-    $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$product) {
-        throw new Exception("Le produit n'existe pas", 404);
+        return $this->getProductById($id);
     }
-    $settings = require dirname(__DIR__) . '/Settings/Settings.php';
-    $dbSettings = $settings['settings']['app'];
 
-    $url = $dbSettings['url'];
+    public function updateProductById($id, $name, $description, $type, $price, $unit, $stock, $image)
+    {
+        $sql = "UPDATE PRODUIT SET name_product = :name, desc_product = :description, type_product = :type, price_product = :price, unit_product = :unit, stock_product = :stock, image_product = :image WHERE id_product = :id;";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+            'name' => $name,
+            'description' => $description,
+            'type' => $type,
+            'price' => $price,
+            'unit' => $unit,
+            'stock' => $stock,
+            'image' => $image
+        ]);
 
-    $chemin = "/ressource/image/";
-    return [
-        "id" => $product['id_product'],
-        "name" => $product['name_product'],
-        "description" => $product['desc_product'],
-        "type" => $product['type_product'],
-        "price" => $product['price_product'],
-        "unit" => $product['unit_product'],
-        "stock" => $product['stock_product'],
-        "image" => $url.$chemin.$product['image_product'],
-        "id_producter"=> $product['id_producer']
-    ];
-}
-public function addProduct($id,$name, $description, $type, $price, $unit, $stock,$image, $id_producer){
-    $sql = "INSERT INTO PRODUIT (id_product,name_product, desc_product, type_product, price_product, unit_product, stock_product, image_product, id_producer) 
-    VALUES (:id,:name, :description, :type, :price, :unit, :stock,:image, :id_producer)";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-        'id' => $id,
-        'name' => $name,
-        'description' => $description,
-        'type' => $type,
-        'price' => $price,
-        'unit' => $unit,
-        'stock' => $stock,
-        'image' => $image,
-        'id_producer' => $id_producer
-    ]);
-
-    return $this->getProductById($id);
-}
-public function updateProductById($id, $name, $description, $type, $price, $unit, $stock, $image){
-    $sql = "UPDATE PRODUIT
-    SET name_product = :name,
-        desc_product = :description,
-        type_product = :type,
-        price_product = :price,
-        unit_product = :unit,
-        stock_product = :stock,
-        image_product = :image
-    WHERE id_product = :id;";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-        'id' => $id,
-        'name' => $name,
-        'description' => $description,
-        'type' => $type,
-        'price' => $price,
-        'unit' => $unit,
-        'stock' => $stock,
-        'image' => $image
-    ]);
-
-    return $this->getProductById($id);
-}
-public function deleteProductById($id){
-    $sql = "DELETE FROM PRODUIT WHERE id_product = :id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(['id' => $id]);
-
-    return true;
-}
-
+        return $this->getProductById($id);
+    }
+    
+    public function deleteProductById($id)
+    {
+        $sql = "DELETE FROM PRODUIT WHERE id_product = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -7,9 +8,14 @@ use PDO;
 
 class CommandeService extends Service
 {
+    private $api_url;
+    private $path_image;
     public function __construct($db)
     {
         $this->db = $db;
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $this->api_url = $settings['settings']['app']['url'];
+        $this->path_image = '/ressource/image/';
     }
 
     public function getAllOrders($id_producer)
@@ -18,18 +24,19 @@ class CommandeService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_producer' => $id_producer]);
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         foreach ($orders as $order) {
             $item = [
                 "numero" => $order['id_order'],
                 "statut" => $order['status_order'],
                 "date" => $order['date_order'],
-                "montant" => $order['total_price'].' €',
-                "client" => $order["firstName_user"].' '.$order["lastName_user"],
+                "montant" => $order['total_price'] . ' €',
+                "client" => $order["firstName_user"] . ' ' . $order["lastName_user"],
             ];
-    
+
             $all[] = $item;
         }
-    
+
         return $all;
     }
 
@@ -39,13 +46,6 @@ class CommandeService extends Service
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
-        $dbSettings = $settings['settings']['app'];
-
-        $url = $dbSettings['url'];
-
-        $chemin = "/ressource/image/";
 
         foreach ($order as $order) {
             $item = [
@@ -60,7 +60,7 @@ class CommandeService extends Service
                 "price_product" => $order['price_product'],
                 "unit_product" => $order['unit_product'],
                 "stock_product" => $order['stock_product'],
-                "image_product" => $url . $chemin . $order['image_product'],
+                "image_product" => $this->api_url . $this->path_image . $order['image_product'],
                 "id_producer" => $order['id_producer'],
                 "id_user" => $order['id_user'],
                 "firstName_user" => $order['firstName_user'],
@@ -71,22 +71,16 @@ class CommandeService extends Service
                 "createdAt_user" => $order['createdAt_user'],
                 "role_user" => $order['role_user'],
             ];
-    
+
             $all[] = $item;
         }
         return $all;
     }
 
     public function postOrder($id_orderWanted, $status_orderWanted, $date_orderWanted, $payement_orderWanted, $id_producer_orderWanted, $id_user_orderWanted, $listProducts)
-{
-    try {
-        $this->db->beginTransaction();
-
-        $sql = "INSERT INTO COMMANDE (id_order, status_order, date_order, payement_order, id_producer, id_user) 
-                VALUES (:id_order, :status, :date, :payement, :id_producer, :id_user);";
-        
+    {
+        $sql = "INSERT INTO COMMANDE (id_order, status_order, date_order, payement_order, id_producer, id_user) VALUES (:id_order, :status, :date, :payement, :id_producer, :id_user);";
         $stmt = $this->db->prepare($sql);
-
         $result = $stmt->execute([
             'id_order' => $id_orderWanted,
             'status' => $status_orderWanted,
@@ -97,7 +91,7 @@ class CommandeService extends Service
         ]);
 
         if (!$result) {
-            throw new Exception("Error inserting order", 500);
+            throw new Exception("Erreur lors de l'insertion de la commande", 500);
         }
 
         if (!is_array($listProducts)) {
@@ -113,38 +107,24 @@ class CommandeService extends Service
             ]);
 
             if (!$resultRequete) {
-                throw new Exception("Error inserting product into order", 500);
+                throw new Exception("Erreur lors de l'insertion de la commande", 500);
             }
         }
 
-        $this->db->commit();
-
         return $this->getAnOrderById($id_orderWanted);
-    } catch (PDOException $e) {
-
-        $this->db->rollBack();
-
-        if ($e->errorInfo[1] == 1452) {
-            throw new Exception("Foreign key constraint violation: " . $e->getMessage(), 500);
-        } else {
-            throw $e;
-        }
     }
-}
-    
 
 
 
     public function updateOrderById($id_orderWanted, $status_orderWanted)
     {
         $sql = "UPDATE COMMANDE SET status_order=:statut WHERE id_order =:id_order;";
-
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'statut' => $status_orderWanted,
             'id_order' => $id_orderWanted
         ]);
-        
+
         return $this->getAnOrderById($id_orderWanted);
     }
 

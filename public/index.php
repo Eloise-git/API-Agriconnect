@@ -11,6 +11,9 @@ use App\Middlewares\AuthMiddleware;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+$settings = require dirname(__DIR__) . '/app/Settings/Settings.php';
+$basePath = $settings['settings']['app']['basePath'];
+
 $app = AppFactory::create();
 
 $app->setBasePath("/api-agriconnect");
@@ -81,7 +84,7 @@ $app->delete('/product/{id}', Controllers\ProductController::class . ':deletePro
 $app->get('/orders', Controllers\CommandesController::class . ':getAllCommandes')->add(AuthMiddleware::class);
 $app->get('/order/{id}', Controllers\CommandesController::class . ':getACommande')->add(AuthMiddleware::class);
 $app->post('/order', Controllers\CommandesController::class . ':postCommande')->add(AuthMiddleware::class);
-$app->patch('/order/{id}', Controllers\CommandesController::class . ':pathCommande') ->add(AuthMiddleware::class);
+$app->patch('/order/{id}', Controllers\CommandesController::class . ':pathCommande')->add(AuthMiddleware::class);
 $app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCommande')->add(AuthMiddleware::class);
 
 // Messages routes
