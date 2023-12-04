@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Controller;
@@ -25,7 +26,7 @@ class UserController extends Controller
     try {
       $user = $request->getAttribute('user');
       $userId = $user->id;
-      
+
       $user = $this->db->user->getUserById($userId);
 
       return sendJSON($response, $user, 200);
@@ -33,14 +34,18 @@ class UserController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
-  
+
 
   //- `GET /api/user/{id}` : Permet d'obtenir les informations d'un utilisateur
   public function getUser(Request $request, Response $response, array $args)
   {
     try {
-      $userId = $args['id'];
-      
+      $userId = $args['id'] ?? null;
+
+      if (!$userId) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+
       $user = $this->db->user->getUserById($userId);
 
       return sendJSON($response, $user, 200);
@@ -55,29 +60,29 @@ class UserController extends Controller
   {
     try {
       $users = $this->db->user->getAll();
+
       return sendJSON($response, $users, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
     }
   }
-  
+
   //`PUT /api/user/{id}` : Permet de mettre à jour les informations d'un utilisateur
   public function putUser(Request $request, Response $response, array $args)
   {
     try {
-      $userId = $args['id'];
+      $userId = $args['id'] ?? null;
       $rawdata = file_get_contents("php://input");
-      parse_str($rawdata,$data);
-      
+      parse_str($rawdata, $data);
+
       $nom = $data['nom'] ?? null;
       $prenom = $data['prenom'] ?? null;
       $email = $data['email'] ?? null;
       $password = $data['password'] ?? null;
       $numero = $data['numero'] ?? null;
-      
-      if (!$nom || !$prenom || !$email || !$password || !$numero) {
+
+      if (!$userId || !$nom || !$prenom || !$email || !$password || !$numero) {
         throw new Exception("Tous les champs sont obligatoiress", 400);
-        
       }
 
       $hashedPassword = hashPassword($password);
@@ -88,12 +93,16 @@ class UserController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
-  
+
   //DELETE /api/user/{id}` : Permet de supprimer un utilisateur
   public function deleteUser(Request $request, Response $response, array $args)
   {
     try {
-      $userId = $args['id'];
+      $userId = $args['id'] ?? null;
+
+      if (!$userId) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
 
       $this->db->user->deleteUserById($userId);
 
@@ -102,5 +111,4 @@ class UserController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Controller;
@@ -13,7 +14,8 @@ require_once dirname(__DIR__) . '/Lib/Utils.php';
 
 class CommandesController extends Controller
 
-{public function __construct()
+{
+  public function __construct()
   {
     $this->db = new Database();
   }
@@ -22,11 +24,11 @@ class CommandesController extends Controller
   {
     try {
       $user = $request->getAttribute('user');
-      $userId=$user->id;
+      $userId = $user->id;
 
       $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
       $order = $this->db->order->getAllOrders($id_producer);
-      
+
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {
       var_dump($e->getCode());
@@ -37,8 +39,14 @@ class CommandesController extends Controller
   public function getACommande(Request $request, Response $response, array $args)
   {
     try {
-      $order = $this->db->order->getAnOrderById($args['id']);
-      
+      $id_order = $args['id'] ?? null;
+
+      if (!$id_order) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+
+      $order = $this->db->order->getAnOrderById($id_order);
+
       return sendJSON($response, $order, 200);
     } catch (Exception $e) {
       var_dump($e->getCode());
@@ -46,24 +54,24 @@ class CommandesController extends Controller
     }
   }
 
-  
+
   public function postCommande(Request $request, Response $response, array $args)
   {
     try {
-      $data = $request->getParsedBody(); 
+      $data = $request->getParsedBody();
 
       $status = $data['status'] ?? null;
       $date = $data['date'] ?? null;
       $payement = $data['payement'] ?? null;
       $id_producer = $data['id_producer'] ?? null;
       $id_user = $data['id_user'] ?? null;
-      $id_order = uniqid();
       $listProducts = $data['listProducts'];
 
       if (!$status || !$date || !$payement || !$id_producer || !$id_user || !$listProducts) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
+      $id_order = uniqid();
       $order = $this->db->order->postOrder($id_order, $status, $date, $payement, $id_producer, $id_user, $listProducts);
 
       return sendJSON($response, $order, 200);
@@ -76,11 +84,14 @@ class CommandesController extends Controller
   public function pathCommande(Request $request, Response $response, array $args)
   {
     try {
-      $data = $request->getParsedBody(); 
+      $data = $request->getParsedBody();
 
       $status = $data['statut'] ?? null;
-      $id_order = $args['id'];
+      $id_order = $args['id'] ?? null;
 
+      if (!$status || !$id_order) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
 
       $order = $this->db->order->updateOrderById($id_order, $status);
 
@@ -94,8 +105,11 @@ class CommandesController extends Controller
   public function deleteCommande(Request $request, Response $response, array $args)
   {
     try {
-      
-      $id_order = $args['id'];
+      $id_order = $args['id'] ?? null;
+
+      if (!$id_order) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
 
       $this->db->order->deleteOrderById($id_order);
 

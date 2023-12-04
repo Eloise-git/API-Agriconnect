@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Controller;
@@ -20,7 +21,6 @@ class MessagerieController extends Controller
   public function getAllMessages(Request $request, Response $response, array $args)
   {
     try {
-
       $messages = $this->db->message->getAllMessages();
 
       return sendJSON($response, $messages, 200);
@@ -32,8 +32,13 @@ class MessagerieController extends Controller
   public function getAMessage(Request $request, Response $response, array $args)
   {
     try {
+      $id_message = $args['id'] ?? null;
 
-      $message = $this->db->message->getAMessageById($args['id']);
+      if (!$id_message) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+
+      $message = $this->db->message->getAMessageById($id_message);
 
       return sendJSON($response, $message, 200);
     } catch (Exception $e) {
@@ -44,20 +49,20 @@ class MessagerieController extends Controller
   public function postMessage(Request $request, Response $response, array $args)
   {
     try {
-      
       $user = $request->getAttribute('user');
       $userId = $user->id;
 
       $body = $request->getParsedBody();
-      $idmes = uniqid();
-      $date = date('Y-m-d H:i:s');
       $content = $body['message'];
       $id_user1 = $body['destinataire'];
 
       if (!$id_user1 || !$content) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
-      
+
+      $idmes = uniqid();
+      $date = date('Y-m-d H:i:s');
+
       $message = $this->db->message->postMessage($idmes, $date, $content, $userId, $id_user1);
 
       return sendJSON($response, $message, 200);
@@ -69,7 +74,14 @@ class MessagerieController extends Controller
   public function deleteMessage(Request $request, Response $response, array $args)
   {
     try {
-      $this->db->message->deleteMessageById($args['id']);
+      $id_message = $args['id'] ?? null;
+
+      if (!$id_message) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+
+      $this->db->message->deleteMessageById($id_message);
+
       return sendJSON($response, "Le message a bien été supprimer", 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
