@@ -26,7 +26,7 @@ class CommandesController extends Controller
       $user = $request->getAttribute('user');
       $userId = $user->id;
 
-      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $id_producer = $this->db->producer->getProducerByUserId($userId)['id_producer'];
       $order = $this->db->order->getAllOrders($id_producer);
 
       return sendJSON($response, $order, 200);
