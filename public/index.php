@@ -16,7 +16,7 @@ $basePath = $settings['settings']['app']['basePath'];
 
 $app = AppFactory::create();
 
-$app->setBasePath("/api-agriconnect");
+$app->setBasePath($basePath);
 
 $app->addErrorMiddleware(true, true, true);
 
