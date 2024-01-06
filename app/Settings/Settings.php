@@ -5,7 +5,8 @@ namespace App\Settings;
 use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
-$dotenv->load('C:/xampp/htdocs/api-agriconnect/.env.local');
+$dotenv->load(dirname(__DIR__, 2) . '/.env.local');
+
 
 return [
   'settings' => [
