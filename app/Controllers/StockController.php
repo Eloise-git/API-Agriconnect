@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Controller;
@@ -22,11 +23,18 @@ class StockController extends Controller
   {
     try {
       $user = $request->getAttribute('user');
-      $userId=$user->id;
+      $userId = $user->id;
 
-      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $producer = $this->db->producer->getProducerByUserId($userId);
+
+      if (!$producer) {
+        throw new Exception("Vous n'êtes pas un producteur", 400);
+      }
+
+      $id_producer = $producer['id_producer'];
+
       $stock = $this->db->stock->getAllStock($id_producer);
-      
+
       return sendJSON($response, $stock, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
@@ -36,11 +44,23 @@ class StockController extends Controller
   {
     try {
       $user = $request->getAttribute('user');
-      $userId=$user->id;
-      $id_product = $args['id'];
-      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
-      $stock = $this->db->stock->getAStockById($id_product,$id_producer);
-      
+      $userId = $user->id;
+      $id_product = $args['id'] ?? null;
+
+      if (!$id_product) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+
+      $producer = $this->db->producer->getProducerByUserId($userId);
+
+      if (!$producer) {
+        throw new Exception("Vous n'êtes pas un producteur", 400);
+      }
+
+      $id_producer = $producer['id_producer'];
+
+      $stock = $this->db->stock->getAStockById($id_product, $id_producer);
+
       return sendJSON($response, $stock, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());
@@ -51,17 +71,27 @@ class StockController extends Controller
   {
     try {
       $user = $request->getAttribute('user');
-      $userId=$user->id;
-      $id_product = $args['id'];
-      $id_producer = $this->db->producer->getProducerByUserId($userId)[0]['id_producer'];
+      $userId = $user->id;
+      $id_product = $args['id'] ?? null;
+
       $rawdata = file_get_contents("php://input");
-      parse_str($rawdata,$data);
-      
+      parse_str($rawdata, $data);
+
       $stock_data = $data['stock'] ?? null;
-      if (!$stock_data) {
+
+      if (!$id_product || !$stock_data) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
-      $stock = $this->db->stock->updateStockById($id_product,$id_producer,$stock_data);
+
+      $producer = $this->db->producer->getProducerByUserId($userId);
+
+      if (!$producer) {
+        throw new Exception("Vous n'êtes pas un producteur", 400);
+      }
+
+      $id_producer = $producer['id_producer'];
+
+      $stock = $this->db->stock->updateStockById($id_product, $id_producer, $stock_data);
 
       return sendJSON($response, $stock, 200);
     } catch (Exception $e) {

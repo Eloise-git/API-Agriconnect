@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -39,13 +40,13 @@ class AuthService extends Service
     ];
   }
 
-  public function register($nom, $prenom, $email, $password, $numero,$createdAt, $role)
+  public function register($nom, $prenom, $email, $password, $numero, $createdAt, $role)
   {
     $sql = "SELECT * FROM UTILISATEUR WHERE email_user = :email";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     if ($user) {
       throw new Exception("L'utilisateur existe déjà", 409);
     }
@@ -61,14 +62,14 @@ class AuthService extends Service
       'numero' => $numero,
       'createdAt' => $createdAt,
       'role' => $role
-      
+
     ]);
-    
+
     $sql = "SELECT * FROM UTILISATEUR WHERE email_user = :email";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     return [
       "id" => $user['id_user'],
       "name" => $user['firstName_user'],

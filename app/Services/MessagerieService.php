@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -30,7 +31,7 @@ class MessagerieService extends Service
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$message) {
-        throw new Exception("Le message n'existe pas", 404);
+            throw new Exception("Le message n'existe pas", 404);
         }
 
         return $message;
@@ -38,18 +39,17 @@ class MessagerieService extends Service
 
     public function postMessage($id, $date, $content, $userId, $id_user1)
     {
-    $sql = "INSERT INTO MESSAGERIE (id_message, date_message, content_message, id_user, id_user_1) VALUES (:id_message, :date_message, :content_message, :id_user, :id_user1)";
+        $sql = "INSERT INTO MESSAGERIE (id_message, date_message, content_message, id_user, id_user_1) VALUES (:id_message, :date_message, :content_message, :id_user, :id_user1)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id_message' => $id,
+            'date_message' => $date,
+            'content_message' => $content,
+            'id_user' => $userId,
+            'id_user1' => $id_user1
+        ]);
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-    'id_message' => $id,
-    'date_message' => $date,
-    'content_message' => $content,
-    'id_user' => $userId,
-    'id_user1' => $id_user1
-    ]);
-    $message = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $this->getAMessageById($id);
+        return $this->getAMessageById($id);
     }
 
 

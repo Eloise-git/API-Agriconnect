@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
@@ -33,31 +34,33 @@ class UserService extends Service
       "createdAt" => $user['createdAt_user']
     ];
   }
-  public function getAll(){
+
+  public function getAll()
+  {
     $sql = "SELECT * FROM UTILISATEUR";
     $stmt = $this->db->prepare($sql);
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $all = [];
-
     foreach ($users as $user) {
-        $item = [
-            "id" => $user['id_user'],
-            "name" => $user['firstName_user'],
-            "surname" => $user['lastName_user'],
-            "email" => $user['email_user'],
-            "phone" => $user['phoneNumber_user'],
-            "role" => $user['role_user'],
-            "createdAt" => $user['createdAt_user']
-        ];
+      $item = [
+        "id" => $user['id_user'],
+        "name" => $user['firstName_user'],
+        "surname" => $user['lastName_user'],
+        "email" => $user['email_user'],
+        "phone" => $user['phoneNumber_user'],
+        "role" => $user['role_user'],
+        "createdAt" => $user['createdAt_user']
+      ];
 
-        $all[] = $item;
+      $all[] = $item;
     }
 
     return $all;
   }
 
-  public function updateUserById($id,$nom, $prenom, $email, $password, $numero)
+  public function updateUserById($id, $nom, $prenom, $email, $password, $numero)
   {
     $sql = "UPDATE UTILISATEUR SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
     $stmt = $this->db->prepare($sql);
@@ -71,9 +74,11 @@ class UserService extends Service
     ]);
 
     $user = $this->getUserById($id);
+
     if (!$user) {
       throw new Exception("Erreur lors de la mise à jour de l'utilisateur : " . implode(", ", $stmt->errorInfo()));
     }
+
     return $user;
   }
 

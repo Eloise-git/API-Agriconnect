@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Controller;
@@ -66,12 +67,11 @@ class AuthController extends Controller
 
       $hashedPassword = hashPassword($password);
       $createdAt = date('Y-m-d');
-      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero,$createdAt, $role);
+      $newuser = $this->db->auth->register($nom, $prenom, $email, $hashedPassword, $numero, $createdAt, $role);
 
       return sendJSON($response, $newuser, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage(), $e->getCode());
     }
   }
-
 }
