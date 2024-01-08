@@ -69,7 +69,7 @@ $app->put('/producer/{id}', controllers\ProducerController::class . ':putProduce
 $app->delete('/producer/{id}', controllers\ProducerController::class . ':deleteProducer');
 
 // Producer by user routes
-$app->get('/producer/user/{id}', controllers\ProducerController::class . ':getProducerByUserId');
+$app->get('/producer/user/{id}', controllers\ProducerController::class . ':getProducerByUserId')->add(AuthMiddleware::class);
 
 // Products routes
 $app->get('/ressource/image/{name}', controllers\ImageController::class . ':getImage');

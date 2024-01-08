@@ -58,6 +58,27 @@ class ProducerController extends Controller
       return sendError($response, $e->getMessage());
     }
   }
+  public function getProducerByUserId(Request $request, Response $response, array $args)
+  {
+    try {
+      $user = $request->getAttribute('user');
+      $userId = $user->id;
+
+      $user = $this->db->producer->getProducerByUserId($userId);
+
+      if (!$user) {
+        throw new Exception("Vous n'êtes pas un producteur", 400);
+      }
+      
+      $id_producer = $user['id_producer'];
+
+      $producerWanted = $this->db->producer->getProducerById($id_producer);
+
+      return sendJSON($response, $producerWanted, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
 
   public function getProducerByName(Request $request, Response $response, array $args)
   {
