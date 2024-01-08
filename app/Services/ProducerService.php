@@ -75,7 +75,7 @@ class ProducerService extends Service
     }
     public function getProducerByUserId($id)
     {
-        $sql = "SELECT producteur.id_producer FROM UTILISATEUR JOIN PRODUCTEUR ON PRODUCTEUR.id_user=utilisateur.id_user WHERE utilisateur.id_user = :id AND role_user='producer' ";
+        $sql = "SELECT PRODUCTEUR.id_producer FROM UTILISATEUR JOIN PRODUCTEUR ON PRODUCTEUR.id_user=UTILISATEUR.id_user WHERE UTILISATEUR.id_user = :id AND role_user='producer' ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $aProducer = $stmt->fetch(PDO::FETCH_ASSOC);
