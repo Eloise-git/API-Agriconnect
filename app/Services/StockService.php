@@ -31,9 +31,9 @@ class StockService extends Service
                 "id" => $stock['id_product'],
                 "name" => $stock['name_product'],
                 "category" => $stock['type_product'],
-                "quantity" => $stock['stock_product'],
+                "quantity" => (int) $stock['stock_product'],
                 "available" => $stock['stock_product'] - $stock['Reservés'],
-                "reserved" => $stock['Reservés'],
+                "reserved" => (int) $stock['Reservés'],
                 "price" => $stock['price_product'],
                 "image" => $this->api_url . $this->path_image . $stock['image_product'],
                 "unit" => $stock['unit_product']
