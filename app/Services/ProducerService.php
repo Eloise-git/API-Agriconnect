@@ -254,8 +254,8 @@ class ProducerService extends Service
             "description" => $producer['desc_producer'],
             "paymentMethod" => $producer['payement_producer'] ?? null,
             "address" => $producer['adress_producer'],
-            "latitude" => $producer['latitude_producer'],
-            "longitude" => $producer['longitude_producer'],
+            "latitude" => (float) $producer['latitude_producer'],
+            "longitude" => (float) $producer['longitude_producer'],
             "phoneNumber" => $producer['phoneNumber_producer'],
             "category" => $producer['category_producer'],
             "image" => $this->api_url . $this->path_image . $producer['image_producer']
