@@ -94,15 +94,22 @@ class ProducerService extends Service
         $stmt->execute(['name' => $name]);
         $aProducer = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        if (!$aProducer) {
+            throw new Exception("Le producteur n'existe pas", 404);
+        }
         $id = $aProducer[0]['id_user'];
         $sql = "SELECT createdAt_user FROM `utilisateur` WHERE id_user = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $createdAt_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (!$aProducer) {
-            throw new Exception("Le producteur n'existe pas", 404);
-        }
+        
+        $settings = require dirname(__DIR__) . '/Settings/Settings.php';
+        $dbSettings = $settings['settings']['app'];
+
+        $url = $dbSettings['url'];
+
+        $chemin = "/ressource/image/";
 
         $result = [];
         foreach ($aProducer as $producer) {
