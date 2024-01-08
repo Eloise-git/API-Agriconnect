@@ -21,7 +21,9 @@ class ImageController extends Controller
   function getImage(Request $request, Response $response, array $args)
   {
     try {
-      $file = dirname(dirname(__DIR__))  . "/ressource/image/" . $args['name'];
+      $name = $args['name'] ?? null;
+      $name = explode('&', $name)[0];
+      $file = dirname(dirname(__DIR__))  . "/ressource/image/" . $name;
 
       if (!file_exists($file)) {
         throw new Exception("Image pas trouvée", 404);
