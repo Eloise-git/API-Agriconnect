@@ -98,12 +98,12 @@ class ProducerService extends Service
             throw new Exception("Le producteur n'existe pas", 404);
         }
         $id = $aProducer[0]['id_user'];
-        $sql = "SELECT createdAt_user FROM `utilisateur` WHERE id_user = :id";
+        $sql = "SELECT createdAt_user FROM UTILISATEUR WHERE id_user = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $createdAt_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        
+
         $settings = require dirname(__DIR__) . '/Settings/Settings.php';
         $dbSettings = $settings['settings']['app'];
 
