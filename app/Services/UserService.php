@@ -29,7 +29,7 @@ class UserService extends Service
       "name" => $user['firstName_user'],
       "surname" => $user['lastName_user'],
       "email" => $user['email_user'],
-      "phoneNumber" => $user['phoneNumber_user'],
+      "phoneNumber" => (int) $user['phoneNumber_user'],
       "role" => $user['role_user'],
       "createdAt" => $user['createdAt_user']
     ];
