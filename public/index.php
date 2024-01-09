@@ -90,6 +90,7 @@ $app->delete('/order/{id}', Controllers\CommandesController::class . ':deleteCom
 // Messages routes
 $app->get('/messages', Controllers\MessagerieController::class . ':getAllMessages')->add(AuthMiddleware::class);
 $app->get('/message/{id}', Controllers\MessagerieController::class . ':getAMessage')->add(AuthMiddleware::class);
+$app->get('/message/{id}', Controllers\MessagerieController::class . ':getAMessageByUserId')->add(AuthMiddleware::class);
 $app->post('/message', Controllers\MessagerieController::class . ':postMessage')->add(AuthMiddleware::class);
 $app->delete('/message/{id}', Controllers\MessagerieController::class . ':deleteMessage');
 

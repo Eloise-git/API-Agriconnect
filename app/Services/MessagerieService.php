@@ -39,7 +39,7 @@ class MessagerieService extends Service
 
     public function getAMessageByUserId($userId)
     {
-        $sql = "SELECT * FROM MESSAGERIE WHERE id_user = :id OR id_user_1";
+        $sql = "SELECT * FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $userId]);
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
