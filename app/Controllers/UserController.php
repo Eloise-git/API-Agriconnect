@@ -67,6 +67,40 @@ class UserController extends Controller
     }
   }
 
+  public function changeAVisitorToClient(Request $request, Response $response, array $args)
+  {
+    try{
+      $data =$request->getParsedBody();
+      $userId = $data['id'] ?? null;
+      
+      if (!$userId) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+      $this->db->user->changeAVisitorToClient($userId);
+
+    return sendJSON($response, [], 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+
+  public function refuseUser(Request $request, Response $response, array $args)
+  {
+    try{
+      $data =$request->getParsedBody();
+      $userId = $data['id'] ?? null;
+      
+      if (!$userId) {
+        throw new Exception("Tous les champs sont obligatoires", 400);
+      }
+      $this->db->user->deleteUserById($userId);
+
+    return sendJSON($response, [], 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+
   //`PUT /api/user/{id}` : Permet de mettre à jour les informations d'un utilisateur
   public function putUser(Request $request, Response $response, array $args)
   {

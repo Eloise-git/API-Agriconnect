@@ -60,6 +60,16 @@ class UserService extends Service
     return $all;
   }
 
+  public function changeAVisitorToClient($userId)
+  {
+    $sql = "UPDATE UTILISATEUR SET role_user = 'Client' WHERE id_user = :id";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "id" => $userId
+    ]);
+   
+  }
+
   public function updateUserById($id, $nom, $prenom, $email, $password, $numero)
   {
     $sql = "UPDATE UTILISATEUR SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
