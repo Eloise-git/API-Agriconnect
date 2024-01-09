@@ -109,19 +109,16 @@ class ProductController extends Controller
       parse_str($rawdata, $data);
 
       $name = $data['name'] ?? null;
-      $description = $data['description'] ?? null;
       $type = $data['type'] ?? null;
       $price = $data['price'] ?? null;
       $unit = $data['unit'] ?? null;
       $stock = $data['stock'] ?? null;
-      $image = $data['image'] ?? null;
 
-      if (!$productId || !$name || !$description || !$type || !$price || !$unit || !$stock) {
+      if (!$productId || !$name || !$type || !$price || !$unit || !$stock) {
         throw new Exception("Tous les champs sont obligatoires", 400);
       }
 
-      $product = $this->db->product->updateProductById($productId, $name, $description, $type, $price, $unit, $stock, $image);
-
+      $product = $this->db->product->updateProductById($productId, $name, $type, $price, $unit, $stock);
       return sendJSON($response, $product, 200);
     } catch (Exception $e) {
       return sendError($response, $e->getMessage());

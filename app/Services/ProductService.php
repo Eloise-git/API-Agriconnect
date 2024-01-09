@@ -87,19 +87,17 @@ class ProductService extends Service
         return $this->getProductById($id);
     }
 
-    public function updateProductById($id, $name, $description, $type, $price, $unit, $stock, $image)
+    public function updateProductById($id, $name, $type, $price, $unit, $stock)
     {
-        $sql = "UPDATE PRODUIT SET name_product = :name, desc_product = :description, type_product = :type, price_product = :price, unit_product = :unit, stock_product = :stock, image_product = :image WHERE id_product = :id;";
+        $sql = "UPDATE PRODUIT SET name_product = :name, type_product = :type, price_product = :price, unit_product = :unit, stock_product = :stock WHERE id_product = :id;";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'id' => $id,
             'name' => $name,
-            'description' => $description,
             'type' => $type,
             'price' => $price,
             'unit' => $unit,
-            'stock' => $stock,
-            'image' => $image
+            'stock' => $stock
         ]);
 
         return $this->getProductById($id);
