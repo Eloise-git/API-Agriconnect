@@ -40,16 +40,7 @@ class ProducerController extends Controller
   public function getProducerById(Request $request, Response $response, array $args)
   {
     try {
-      $user = $request->getAttribute('user');
-      $userId = $user->id;
-
-      $user = $this->db->producer->getProducerByUserId($userId);
-
-      if (!$user) {
-        throw new Exception("Vous n'êtes pas un producteur", 400);
-      }
-
-      $id_producer = $user[0]['id_producer'];
+      $id_producer = $args['id'] ?? null;
 
       $producerWanted = $this->db->producer->getProducerById($id_producer);
 

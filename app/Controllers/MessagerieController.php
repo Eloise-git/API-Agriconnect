@@ -21,7 +21,10 @@ class MessagerieController extends Controller
   public function getAllMessages(Request $request, Response $response, array $args)
   {
     try {
-      $messages = $this->db->message->getAllMessages();
+      $user = $request->getAttribute('user');
+      $userId = $user->id;
+      var_dump($userId);
+      $messages = $this->db->message->getAllMessages($userId);
 
       return sendJSON($response, $messages, 200);
     } catch (Exception $e) {
@@ -51,7 +54,7 @@ class MessagerieController extends Controller
     try {
       $user = $request->getAttribute('user');
       $userId = $user->id;
-
+      
       $message = $this->db->message->getAMessageByUserId($userId);
 
       return sendJSON($response, $message, 200);

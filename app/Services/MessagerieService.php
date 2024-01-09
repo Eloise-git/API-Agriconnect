@@ -13,14 +13,25 @@ class MessagerieService extends Service
         $this->db = $db;
     }
 
-    public function getAllMessages()
+    public function getAllMessages($userId)
     {
-        $sql = "SELECT * FROM MESSAGERIE";
+        $sql = "SELECT * FROM MESSAGERIE WHERE id_user = :id OR id_user_1 = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(['id' => $userId]);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $all = [];
+        foreach ($messages as $message) {
+            $item = [
+                "id" => $message['id_message'],
+                "date" => $message['date_message'],
+                "content" => $message['content_message'],
+                "sender" => $message['id_user'] ?? null,
+                "receiver" => $message['id_user_1']
+            ];
 
-        return $messages;
+            $all[] = $item;
+        }
+        return $all;
     }
 
     public function getAMessageById($id)
@@ -34,7 +45,13 @@ class MessagerieService extends Service
             throw new Exception("Le message n'existe pas", 404);
         }
 
-        return $message;
+        return [
+            "id" => $message['id_message'],
+            "date" => $message['date_message'],
+            "content" => $message['content_message'],
+            "sender" => $message['id_user'] ?? null,
+            "receiver" => $message['id_user_1']
+        ];
     }
 
     public function getAMessageByUserId($userId)

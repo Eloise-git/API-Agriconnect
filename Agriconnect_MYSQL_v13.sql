@@ -132,7 +132,7 @@ INSERT INTO PRODUIT (id_product, name_product, desc_product, type_product, price
 ('pr6', 'Vin rouge', 'Vin rouge vieilli', 'Vins', 10.00, 'Bouteille', 100, 'Vin_rouge.jpg', 'p5'),
 ('pr7', 'Fromage de chèvre', 'Fromage de chèvre artisanal', 'Fromages', 3.00, 'Pièce', 80, 'Fromage_de_chevre.jpg', 'p6'),
 ('pr8', 'Miel de lavande', 'Miel de lavande pur', 'Miels', 7.00, 'Pot', 100, 'Miel_de_lavande.jpg', 'p7'),
-('pr9', 'Pêches', 'Pêches juteuses et sucrées', 'Fruits', 0.75, 'Kg', 150, 'Peches.jng', 'p1'),
+('pr9', 'Pêches', 'Pêches juteuses et sucrées', 'Fruits', 0.75, 'Kg', 150, 'Peches.png', 'p1'),
 ('pr10', 'Pommes de terre', 'Pommes de terre locales', 'Légumes', 0.40, 'Kg', 250, 'Pommes_de_terre.png', 'p2'),
 ('pr11', 'Pain aux céréales', 'Pain croustillant aux céréales', 'Pain', 1.50, 'Unité', 80, 'Pain_aux_céréales.png', 'p2'),
 ('pr12', 'Oeufs frais', 'Oeufs de poule élevées en plein air', 'Produits laitiers', 2.00, 'Douzaine', 120, 'Oeufs.jpg', 'p9'),
