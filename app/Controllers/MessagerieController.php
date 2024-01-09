@@ -46,6 +46,19 @@ class MessagerieController extends Controller
     }
   }
 
+  public function getAMessageByUserId(Request $request, Response $response, array $args)
+  {
+    try {
+      $id_user = getCurrentUser();
+
+      $message = $this->db->message->getAMessageByUserId($id_user);
+
+      return sendJSON($response, $message, 200);
+    } catch (Exception $e) {
+      return sendError($response, $e->getMessage());
+    }
+  }
+
   public function postMessage(Request $request, Response $response, array $args)
   {
     try {
