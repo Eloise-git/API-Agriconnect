@@ -55,6 +55,8 @@ $app->post('/register', Controllers\AuthController::class . ':register');
 $app->get('/user', Controllers\UserController::class . ':getCurrentUser')->add(AuthMiddleware::class);
 $app->get('/user/{id}', Controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->get('/users', Controllers\UserController::class . ':getAllUser')->add(AuthMiddleware::class);
+$app->post('/user/accept', Controllers\UserController::class . ':changeAVisitorToClient')->add(AuthMiddleware::class);
+$app->post('/user/refuse', Controllers\UserController::class . ':refuseUser')->add(AuthMiddleware::class);
 $app->post('/user', Controllers\UserController::class . ':getUser')->add(AuthMiddleware::class);
 $app->put('/user/{id}', Controllers\UserController::class . ':putUser')->add(AuthMiddleware::class);
 $app->delete('/user/{id}', Controllers\UserController::class . ':deleteUser')->add(AuthMiddleware::class);
