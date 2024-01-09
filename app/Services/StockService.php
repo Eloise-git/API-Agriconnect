@@ -20,7 +20,7 @@ class StockService extends Service
 
     public function getAllStock($id_producer)
     {
-        $sql = "SELECT PRODUIT.id_product,name_product,type_product,stock_product,image_product,price_product,unit_product,COUNT(id_order)AS 'Reservés' FROM PRODUIT LEFT JOIN CONTENIR ON CONTENIR.id_product=produit.id_product WHERE id_producer = :id_producer GROUP BY Produit.id_product";
+        $sql = "SELECT PRODUIT.id_product,name_product,type_product,stock_product,image_product,price_product,unit_product,COUNT(id_order)AS 'Reservés' FROM PRODUIT LEFT JOIN CONTENIR ON CONTENIR.id_product=PRODUIT.id_product WHERE id_producer = :id_producer GROUP BY PRODUIT.id_product";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id_producer' => $id_producer]);
         $stocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,9 +31,9 @@ class StockService extends Service
                 "id" => $stock['id_product'],
                 "name" => $stock['name_product'],
                 "category" => $stock['type_product'],
-                "quantity" => $stock['stock_product'],
+                "quantity" => (int) $stock['stock_product'],
                 "available" => $stock['stock_product'] - $stock['Reservés'],
-                "reserved" => $stock['Reservés'],
+                "reserved" => (int) $stock['Reservés'],
                 "price" => $stock['price_product'],
                 "image" => $this->api_url . $this->path_image . $stock['image_product'],
                 "unit" => $stock['unit_product']

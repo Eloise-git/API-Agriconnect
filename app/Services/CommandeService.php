@@ -40,11 +40,11 @@ class CommandeService extends Service
         return $all;
     }
 
-    public function getAnOrderById($id)
+    public function getAnOrderById($id_producer)
     {
-        $sql = "SELECT * FROM COMMANDE JOIN CONTENIR ON CONTENIR.id_order = COMMANDE.id_order JOIN PRODUIT ON PRODUIT.id_product = CONTENIR.id_product JOIN UTILISATEUR ON COMMANDE.id_user = UTILISATEUR.id_user WHERE COMMANDE.id_order = :id";
+        $sql = "SELECT * FROM COMMANDE JOIN CONTENIR ON CONTENIR.id_order = COMMANDE.id_order JOIN PRODUIT ON PRODUIT.id_product = CONTENIR.id_product JOIN UTILISATEUR ON COMMANDE.id_user = UTILISATEUR.id_user WHERE COMMANDE.id_order = :id_producer";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(['id_producer' => $id_producer]);
         $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($order as $order) {
@@ -52,24 +52,20 @@ class CommandeService extends Service
                 "numero" => $order['id_order'],
                 "statut" => $order['status_order'],
                 "date" => $order['date_order'],
+                "client" => $order["firstName_user"] . ' ' . $order["lastName_user"],
                 "payement" => $order['payement_order'],
                 "id_product" => $order['id_product'],
                 "name_product" => $order['name_product'],
                 "desc_product" => $order['desc_product'],
                 "type_product" => $order['type_product'],
-                "price_product" => $order['price_product'],
+                "price_product" => $order['price_product']. ' €',
                 "unit_product" => $order['unit_product'],
                 "stock_product" => $order['stock_product'],
                 "image_product" => $this->api_url . $this->path_image . $order['image_product'],
                 "id_producer" => $order['id_producer'],
                 "id_user" => $order['id_user'],
-                "firstName_user" => $order['firstName_user'],
-                "lastName_user" => $order['lastName_user'],
                 "email_user" => $order['email_user'],
                 "phoneNumber_user" => $order['phoneNumber_user'],
-                "password_user" => $order['password_user'],
-                "createdAt_user" => $order['createdAt_user'],
-                "role_user" => $order['role_user'],
             ];
 
             $all[] = $item;

@@ -75,7 +75,7 @@ class ProducerService extends Service
     }
     public function getProducerByUserId($id)
     {
-        $sql = "SELECT producteur.id_producer FROM `utilisateur` JOIN producteur ON producteur.id_user=utilisateur.id_user WHERE utilisateur.id_user = :id AND role_user='producer' ";
+        $sql = "SELECT PRODUCTEUR.id_producer FROM UTILISATEUR JOIN PRODUCTEUR ON PRODUCTEUR.id_user=UTILISATEUR.id_user WHERE UTILISATEUR.id_user = :id AND role_user='producer' ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $aProducer = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -98,12 +98,12 @@ class ProducerService extends Service
             throw new Exception("Le producteur n'existe pas", 404);
         }
         $id = $aProducer[0]['id_user'];
-        $sql = "SELECT createdAt_user FROM `utilisateur` WHERE id_user = :id";
+        $sql = "SELECT createdAt_user FROM UTILISATEUR WHERE id_user = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['id' => $id]);
         $createdAt_user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        
+
         $settings = require dirname(__DIR__) . '/Settings/Settings.php';
         $dbSettings = $settings['settings']['app'];
 
@@ -254,9 +254,9 @@ class ProducerService extends Service
             "description" => $producer['desc_producer'],
             "paymentMethod" => $producer['payement_producer'] ?? null,
             "address" => $producer['adress_producer'],
-            "latitude" => $producer['latitude_producer'],
-            "longitude" => $producer['longitude_producer'],
-            "phoneNumber" => $producer['phoneNumber_producer'],
+            "latitude" => (float) $producer['latitude_producer'],
+            "longitude" => (float) $producer['longitude_producer'],
+            "phoneNumber" => (int) $producer['phoneNumber_producer'],
             "category" => $producer['category_producer'],
             "image" => $this->api_url . $this->path_image . $producer['image_producer']
         ];
