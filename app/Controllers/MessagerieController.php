@@ -23,7 +23,7 @@ class MessagerieController extends Controller
     try {
       $user = $request->getAttribute('user');
       $userId = $user->id;
-      var_dump($userId);
+      
       $messages = $this->db->message->getAllMessages($userId);
 
       return sendJSON($response, $messages, 200);
