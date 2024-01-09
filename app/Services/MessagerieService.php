@@ -45,7 +45,13 @@ class MessagerieService extends Service
             throw new Exception("Le message n'existe pas", 404);
         }
 
-        return $message;
+        return [
+            "id" => $message['id_message'],
+            "date" => $message['date_message'],
+            "content" => $message['content_message'],
+            "sender" => $message['id_user'] ?? null,
+            "receiver" => $message['id_user_1']
+        ];
     }
 
     public function getAMessageByUserId($userId)
