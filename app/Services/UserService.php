@@ -79,7 +79,7 @@ class UserService extends Service
       "name" => $nom,
       "surname" => $prenom,
       "email" => $email,
-      "phoneNumber" => (int) $numero,
+      "phoneNumber" => $numero,
       "password" => $password,
     ]);
 

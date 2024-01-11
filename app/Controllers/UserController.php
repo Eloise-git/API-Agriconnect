@@ -113,7 +113,7 @@ class UserController extends Controller
       $prenom = $data['prenom'] ?? null;
       $email = $data['email'] ?? null;
       $password = $data['password'] ?? null;
-      $numero = $data['numero'] ?? null;
+      $numero = (int) $data['numero'] ?? null;
 
       if (!$userId || !$nom || !$prenom || !$email || !$password || !$numero) {
         throw new Exception("Tous les champs sont obligatoiress", 400);
