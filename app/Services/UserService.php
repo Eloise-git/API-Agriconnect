@@ -72,14 +72,14 @@ class UserService extends Service
 
   public function updateUserById($id, $nom, $prenom, $email, $password, $numero)
   {
-    $sql = "UPDATE UTILISATEUR SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phone, password_user= :password WHERE id_user = :id";
+    $sql = "UPDATE UTILISATEUR SET firstName_user = :name, lastName_user = :surname, email_user = :email, phoneNumber_user = :phoneNumber, password_user= :password WHERE id_user = :id";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
       "id" => $id,
       "name" => $nom,
       "surname" => $prenom,
       "email" => $email,
-      "phoneNumber" => (int) $numero,
+      "phoneNumber" => $numero,
       "password" => $password,
     ]);
 

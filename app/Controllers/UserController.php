@@ -119,6 +119,8 @@ class UserController extends Controller
         throw new Exception("Tous les champs sont obligatoiress", 400);
       }
 
+      $numero = intval($numero);
+
       $hashedPassword = hashPassword($password);
       $user = $this->db->user->updateUserById($userId, $nom, $prenom, $email, $hashedPassword, $numero);
 
