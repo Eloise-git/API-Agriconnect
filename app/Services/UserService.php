@@ -62,7 +62,7 @@ class UserService extends Service
 
   public function changeAVisitorToClient($userId)
   {
-    $sql = "UPDATE UTILISATEUR SET role_user = 'Client' WHERE id_user = :id";
+    $sql = "UPDATE UTILISATEUR SET role_user = 'client' WHERE id_user = :id";
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
       "id" => $userId
