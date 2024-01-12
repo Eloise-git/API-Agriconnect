@@ -198,6 +198,7 @@ INSERT INTO MESSAGERIE (id_message, date_message, content_message, id_user, id_u
 ('m8', '2023-01-02 11:10:00', 'Parfait, je vais en prendre une bouteille.', 'u6', 'u1'),
 ('m9', '2023-01-02 11:15:00', 'Je vous remercie pour votre achat!', 'u1', 'u6'),
 ('m10', '2023-01-02 11:20:00', 'Avez-vous du miel de lavande?', 'u7', 'u1');
+('m11', '2023-01-02 11:20:00', 'Avez-vous des pommes de terre ?', 'u7', 'u2');
 
 
 -- Insertion des détails des commandes
