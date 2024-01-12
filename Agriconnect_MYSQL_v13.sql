@@ -128,7 +128,7 @@ INSERT INTO PRODUIT (id_product, name_product, desc_product, type_product, price
 ('pr2', 'Carotte', 'Carottes fraîches', 'Légumes', 0.30, 'Kg', 200, 'Carotte.jpg', 'p2'),
 ('pr3', 'Blé', 'Blé de haute qualité', 'Céréales', 0.25, 'Kg', 300, 'Ble.jpg', 'p1'),
 ('pr4', 'Boeuf', 'Viande de boeuf de qualité', 'Viandes', 15.00, 'Kg', 50, 'Boeuf.png', 'p3'),
-('pr5', 'Lait', 'Lait frais', 'Laits', 1.00, 'Litre', 200, 'Lait.png', 'p1'),
+('pr5', 'Lait', 'Lait frais', 'Laits', 1.00, 'Litre', 200, 'Lait.jpg', 'p1'),
 ('pr6', 'Vin rouge', 'Vin rouge vieilli', 'Vins', 10.00, 'Bouteille', 100, 'Vin_rouge.jpg', 'p5'),
 ('pr7', 'Fromage de chèvre', 'Fromage de chèvre artisanal', 'Fromages', 3.00, 'Pièce', 80, 'Fromage_de_chevre.jpg', 'p6'),
 ('pr8', 'Miel de lavande', 'Miel de lavande pur', 'Miels', 7.00, 'Pot', 100, 'Miel_de_lavande.jpg', 'p7'),
